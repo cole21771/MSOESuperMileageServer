@@ -1,7 +1,7 @@
 # MSOESuperMilageServer
 
-# Developers:
-## Cole Abbeduto
+### Developers:
+* Cole Abbeduto
 
-# Contributers:
-## Eric Drewitz
+### Contributers:
+* Eric Drewitz
