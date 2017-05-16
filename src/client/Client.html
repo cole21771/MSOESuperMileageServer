@@ -1,23 +1,32 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>MSOE SuperMilage Live Data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
     <!-- Angular Material style sheet -->
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 </head>
-<body ng-app="angularApp" ng-init="">
-<div ng-controller="controller" >
+<body ng-app="angularApp" ng-init="data = ''" ng-cloak>
+<div ng-controller="angularController">
+    <md-content>
+        <md-button class="md-raised" ng-click="data = ''">Clear Data</md-button>
+        <p>{{data}}</p>
 
 
-
-
-
-
-
+    </md-content>
 </div>
+
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+<script src="Client.js"></script>
+
 </body>
 </html>
