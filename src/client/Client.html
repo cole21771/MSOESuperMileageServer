@@ -15,10 +15,11 @@
         <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
             <md-nav-item md-nav-click="" name=0>Main</md-nav-item>
             <md-nav-item md-nav-click="" name=1>Chart</md-nav-item>
-            <md-nav-item md-nav-click="" name=2>Rando</md-nav-item>
+            <md-nav-item md-nav-click="" name=2>Review Saved Data</md-nav-item>
+            <ng-md-icon icon="sync_problem" size="40" ng-show="disconnected"></ng-md-icon>
         </md-nav-bar>
 
-        <div ng-show="currentNavItem == '0'">
+        <div ng-show="currentNavItem == 0">
             <p>{{data[0]}}</p>
             <p>{{data[1]}}</p>
             <p>{{data[2]}}</p>
@@ -26,7 +27,7 @@
         </div>
 
 
-        <div ng-show="currentNavItem == '1'">
+        <div ng-show="currentNavItem == 1">
             <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
             <md-button class="md-raised md-primary" ng-click="stopDataFetch()">Stop!</md-button>
             <div ng-show="dataFetch">
@@ -45,7 +46,22 @@
                             chart-series="series" chart-options="options"></canvas>
                 </div>
             </div>-->
+        </div>
 
+        <div ng-show="currentNavItem == 2">
+            <md-button class="md-raised md-primary" ng-click="getSavedData()">Get Saved Data</md-button>
+
+            <md-list ng-show="selectedData == undefined" flex>
+                <md-subheader class="md-no-sticky">Saved Data</md-subheader>
+                <md-list-item ng-repeat="dataSet in savedData track by $index" ng-click="selectDataSet(dataSet)">
+                    <div class="md-list-item-text">{{dataSet}}</div>
+                    <md-button class="md-raised md-warn" ng-click="renameFile(dataSet)">Rename File</md-button>
+                </md-list-item>
+            </md-list>
+
+            <p ng-show="selectedData != undefined">
+                {{selectedData}}
+            </p>
         </div>
     </md-content>
 </div>
@@ -56,6 +72,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
 
 <!-- Angular Material Library -->
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>

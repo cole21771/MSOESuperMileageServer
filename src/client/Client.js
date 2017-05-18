@@ -2,7 +2,7 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ngMaterial', 'chart.js']);
+const angularApp = angular.module('angularApp', ['ngMaterial', 'chart.js', 'ngMdIcons']);
 
 angularApp.controller('angularController', function ($scope,socket) {
     "use strict";
@@ -100,6 +100,56 @@ angularApp.controller('angularController', function ($scope,socket) {
         });
         $scope.labels.push(new Date().toLocaleTimeString());
     }
+
+    $scope.getSavedData = function() {
+        "use strict";
+        $scope.selectedData = undefined;
+        socket.emit('getSavedData');
+    };
+
+    socket.on("savedData", (savedData) => {
+        "use strict";
+        $scope.savedData = savedData;
+    });
+
+    $scope.selectDataSet = function(selectedDataSet) {
+        "use strict";
+        socket.emit("retrieveDataSet", selectedDataSet);
+    };
+
+    socket.on("dataSet", (data) => {
+        $scope.selectedData = data;
+    });
+
+    socket.on('connect', () => {
+        $scope.disconnected = false;
+    });
+
+    socket.on('disconnect', () => {
+        $scope.disconnected = true;
+    });
+
+    $scope.renameFile = function(clickedDataSet) {
+        let invalidCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
+        let hasInvalidCharacter = false;
+
+        let newName = prompt('Please enter a new name for the file: (avoid using \\, /, :, *, ?, ", <, >, |)');
+        if (newName){
+            invalidCharacters.forEach((invalidChar) => {
+                if (newName.includes(invalidChar)) {
+                    console.log(invalidChar);
+                    hasInvalidCharacter = true;
+                }
+            });
+
+            if (hasInvalidCharacter)
+                alert("Please don't use invalid characters: " + invalidCharacters);
+            else
+                socket.emit("renameFile", [clickedDataSet, newName]);
+
+        } else
+            alert("Can't be empty name!")
+    };
 
 
 });
