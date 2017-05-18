@@ -1,6 +1,6 @@
 <html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 
     <script src="/socket.io/socket.io.js"></script>
 
@@ -8,24 +8,17 @@
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
     <link rel="stylesheet" href="Styles.css">
 </head>
+
 <body ng-app="angularApp" ng-cloak>
 <div ng-controller="angularController">
     <md-content class="md-padding">
-        <md-nav-bar
-                md-selected-nav-item="currentNavItem"
-                nav-bar-aria-label="navigation links">
-            <md-nav-item md-nav-click="goto('page1')" name="page1">
-                Data
-            </md-nav-item>
-            <md-nav-item md-nav-click="goto('page2')" name="page2">
-                Chart
-            </md-nav-item>
-            <md-nav-item md-nav-click="goto('page3')" name="page3">
-                Page Three
-            </md-nav-item>
+        <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-click="" name=0>Main</md-nav-item>
+            <md-nav-item md-nav-click="" name=1>Chart</md-nav-item>
+            <md-nav-item md-nav-click="" name=2>Rando</md-nav-item>
         </md-nav-bar>
 
-        <div ng-show="currentNavItem == 'page1'">
+        <div ng-show="currentNavItem == '0'">
             <p>{{data[0]}}</p>
             <p>{{data[1]}}</p>
             <p>{{data[2]}}</p>
@@ -33,12 +26,16 @@
         </div>
 
 
-        <div ng-show="currentNavItem == 'page2'">
+        <div ng-show="currentNavItem == '1'">
             <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
             <md-button class="md-raised md-primary" ng-click="stopDataFetch()">Stop!</md-button>
             <div ng-show="dataFetch">
                 <md-button class="md-raised" ng-click="data = [[],[],[],[]]; labels = []">Clear Data</md-button>
                 <md-button class="md-raised" ng-click="addRand()">Push Random</md-button>
+
+                <canvas id="chart" height="700" width="1300" class="chart chart-line" chart-data="data"
+                        chart-labels="labels"
+                        chart-series="series" chart-options="options"></canvas>
             </div>
 
             <!--<div class="chartWrapper" ng-show="dataFetch">
@@ -48,9 +45,7 @@
                             chart-series="series" chart-options="options"></canvas>
                 </div>
             </div>-->
-            <canvas id="chart" height="700" width="1300" class="chart chart-line" chart-data="data"
-                    chart-labels="labels"
-                    chart-series="series" chart-options="options"></canvas>
+
         </div>
     </md-content>
 </div>

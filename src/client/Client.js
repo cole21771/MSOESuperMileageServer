@@ -8,37 +8,7 @@ angularApp.controller('angularController', function ($scope,socket) {
     "use strict";
 
     $scope.defaultData = [[],[],[],[]];
-    $scope.currentNavItem = 'page1';
-
-    $scope.beginDataFetch = function() {
-        $scope.data = $scope.defaultData;
-        $scope.labels = [];
-
-        $scope.dataFetch = true;
-        socket.on("newData", parseData);
-    };
-
-    function parseData(newData) {
-        if (newData !== null && newData !== undefined) {
-            newData = JSON.parse(newData);
-
-            if (Array.isArray(newData)) {
-                addValuesToGraph(newData);
-            }
-        }
-    }
-
-    $scope.stopDataFetch = function(){
-        $scope.dataFetch = false;
-        $scope.data = [[],[],[],[]];
-        $scope.labels = [];
-        socket.removeListener("newData", parseData);
-    };
-
-    $scope.addRand = function () {
-        "use strict";
-        addValuesToGraph([Math.random(), Math.random(), Math.random(), Math.random()]);
-    };
+    $scope.currentNavItem = 0;
 
     $scope.labels = [];
     $scope.series = ["Num 1", "Num 2", "Num 3", "Num 4"];
@@ -58,22 +28,71 @@ angularApp.controller('angularController', function ($scope,socket) {
                 }
             }]
         },
-        elements : {
+        elements: {
             line: {
                 tension: 0
             }
         },
         responsive: false,
         animation: false,
+        legend: {
+            display: true,
+            labels: {
+                fontColor: "#000080",
+            }
+        }
     };
+
+    $scope.beginDataFetch = function() {
+        $scope.data = $scope.defaultData;
+
+        $scope.labels = [];
+        $scope.dataFetch = true;
+        socket.on("newData", parseData);
+    };
+
+    function parseData(newData) {
+        if (newData !== null && newData !== undefined) {
+
+            newData = JSON.parse(newData);
+            if (Array.isArray(newData)) {
+                addValuesToGraph(newData);
+            }
+        }
+    }
+
+    $scope.stopDataFetch = function(){
+        $scope.dataFetch = false;
+        $scope.data = [[],[],[],[]];
+        $scope.labels = [];
+        socket.removeListener("newData", parseData);
+    };
+
+    $scope.leftSwipe = function() {
+        if ($scope.currentNavItem < 2) {
+            $scope.currentNavItem++;
+        }
+    };
+
+    $scope.rightSwipe = function() {
+        if ($scope.currentNavItem > 0) {
+            $scope.currentNavItem--;
+        }
+    };
+
+    $scope.addRand = function () {
+        "use strict";
+        addValuesToGraph([Math.random(), Math.random(), Math.random(), Math.random()]);
+    };
+
 
     function addValuesToGraph(newData) {
         "use strict";
         if ($scope.data[0].length > 20) {
-            /*$scope.data.forEach(function(array){
+            $scope.data.forEach(function(array){
                 array.shift();
             });
-            $scope.labels.shift();*/
+            $scope.labels.shift();
         }
 
         $scope.data.forEach(function(array, index){
