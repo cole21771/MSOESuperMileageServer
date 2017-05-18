@@ -85,7 +85,6 @@ angularApp.controller('angularController', function ($scope,socket) {
         addValuesToGraph([Math.random(), Math.random(), Math.random(), Math.random()]);
     };
 
-
     function addValuesToGraph(newData) {
         "use strict";
         if ($scope.data[0].length > 20) {
@@ -107,9 +106,9 @@ angularApp.controller('angularController', function ($scope,socket) {
         socket.emit('getSavedData');
     };
 
-    socket.on("savedData", (savedData) => {
+    socket.on("savedDataList", (savedData) => {
         "use strict";
-        $scope.savedData = savedData;
+        $scope.savedDataList = savedData;
     });
 
     $scope.selectDataSet = function(selectedDataSet) {
@@ -148,8 +147,16 @@ angularApp.controller('angularController', function ($scope,socket) {
                 socket.emit("renameFile", [clickedDataSet, newName]);
 
         } else
-            alert("Can't be empty name!")
+            alert("Can't be empty name!");
     };
+
+    socket.on("createdSavedDataFolder", () => {
+        alert("Folder 'savedData/' did not exist, now it does.");
+    });
+
+    socket.on("noSavedData", () => {
+        alert("No save data found!");
+    });
 
 
 });
