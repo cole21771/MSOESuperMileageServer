@@ -19,7 +19,8 @@
             <ng-md-icon icon="sync_problem" size="40" ng-show="disconnected"></ng-md-icon>
         </md-nav-bar>-->
 
-        <md-tabs md-dynamic-height md-selected="currentNavItem">
+        <ng-md-icon style="float:right" icon="sync_problem" size="40" ng-show="disconnected"></ng-md-icon>
+        <md-tabs md-dynamic-height md-selected="currentNavItem" md-swipe-content="true">
             <md-tab label="Main">
                 <hr>
                 <p>{{data[0]}}</p>
@@ -39,7 +40,7 @@
                     <md-tab label="Voltage">
                         <canvas height="700" width="1300" class="chart chart-line"
                                 chart-data="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,46,36,3,52,43,6,4]"
-                                chart-labels="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,446,36,3,52,43,6,4]"
+                                chart-labels="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,46,36,3,52,43,6,4]"
                                 chart-series="['Data']"
                                 chart-options="options"></canvas>
                     </md-tab>
@@ -57,7 +58,8 @@
 
                 <md-list ng-show="selectedData == undefined" flex>
                     <md-subheader class="md-no-sticky">Saved Data</md-subheader>
-                    <md-list-item ng-repeat="dataSet in savedDataList track by $index" ng-click="selectDataSet(dataSet)">
+                    <md-list-item ng-repeat="dataSet in savedDataList track by $index"
+                                  ng-click="selectDataSet(dataSet)">
                         <div class="md-list-item-text">{{dataSet}}</div>
                         <md-button class="md-raised md-warn" ng-click="renameFile(dataSet)">Rename File</md-button>
                     </md-list-item>
@@ -68,7 +70,6 @@
                 </p>
             </md-tab>
         </md-tabs>
-
 
         <!--<div ng-show="currentNavItem == 1">
             <md-tabs md-dynamic-height md-selected="selectedChart">
