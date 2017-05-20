@@ -68,8 +68,8 @@ function exitHandler(options, err) {
         console.log("Attempting to write file!");
         let filePath = new Date().toLocaleString().replace(/[:\/]/g, "-") + ".txt";
 
-        fs.writeFileSync("savedDataList/" + filePath, JSON.stringify(fullDataSet), "utf8");
-        console.log("File probably saved as " + filePath + " in savedDataList folder.");
+        fs.writeFileSync(storage + filePath, JSON.stringify(fullDataSet), "utf8");
+        console.log("File probably saved as " + filePath + " in saveData folder.");
     } else if (err)
         console.log(err.stack);
     else if (options.exit)

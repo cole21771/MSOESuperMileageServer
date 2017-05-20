@@ -7,11 +7,11 @@ const angularApp = angular.module('angularApp', ['ngMaterial', 'chart.js', 'ngMd
 angularApp.controller('angularController', function ($scope,socket) {
     "use strict";
 
-    $scope.defaultData = [[],[],[],[]];
+    $scope.defaultData = [[],[],[],[],[],[]];
     $scope.currentNavItem = 0;
 
     $scope.labels = [];
-    $scope.series = ["Num 1", "Num 2", "Num 3", "Num 4"];
+    $scope.series = ["Speed (MPH)", "RPM", "Joules", "Volts", "Current", "Lap #"];
 
     $scope.options = {
         scales: {
@@ -52,6 +52,7 @@ angularApp.controller('angularController', function ($scope,socket) {
     };
 
     function parseData(newData) {
+        console.log(newData);
         if (newData !== null && newData !== undefined) {
 
             newData = JSON.parse(newData);

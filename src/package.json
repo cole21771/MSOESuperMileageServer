@@ -14,6 +14,7 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "ejs": "^2.5.6",
+    "epoch-charting": "^0.8.4",
     "express": "^4.15.2",
     "socket.io": "^2.0.1"
   }
