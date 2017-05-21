@@ -1,0 +1,21 @@
+{
+  "name": "SuperMilageServer",
+  "homepage": "https://github.com/cole21771/MSOESuperMilageServer",
+  "authors": [
+    "Cole Abbeduto <abbedutocg@msoe.edu>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-nvd3": "^1.0.9"
+  }
+}
