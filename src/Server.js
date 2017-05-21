@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 let index = require('./routes/index');
 app.use('/', index);	 //	associate with index route files
 
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
+
 let fs = require('fs');
 let fullDataSet = [];
 const storage = "savedData/";

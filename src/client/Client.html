@@ -12,13 +12,6 @@
 <body ng-app="angularApp" ng-cloak>
 <div ng-controller="angularController">
     <md-content class="md-padding">
-        <!--<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
-            <md-nav-item md-nav-click="" name=0>Main</md-nav-item>
-            <md-nav-item md-nav-click="" name=1>Charts</md-nav-item>
-            <md-nav-item md-nav-click="" name=2>Review Saved Data</md-nav-item>
-            <ng-md-icon icon="sync_problem" size="40" ng-show="disconnected"></ng-md-icon>
-        </md-nav-bar>-->
-
         <ng-md-icon style="float:right" icon="sync_problem" size="40" ng-show="disconnected"></ng-md-icon>
         <md-tabs md-dynamic-height md-selected="currentNavItem" md-swipe-content="true">
             <md-tab label="Main">
@@ -35,22 +28,13 @@
                 <md-tabs md-dynamic-height md-selected="selectedChart">
                     <md-tab label="Live Data">
                         <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
-                        <canvas id="chart" height="700" width="1300" class="chart chart-line" chart-data="data"
-                                chart-labels="labels"
-                                chart-series="series" chart-options="options"></canvas>
+                        <nvd3 options="options" data="data[0]"></nvd3>
                     </md-tab>
                     <md-tab label="Voltage">
-                        <canvas height="700" width="1300" class="chart chart-line"
-                                chart-data="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,46,36,3,52,43,6,4]"
-                                chart-labels="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,46,36,3,52,43,6,4]"
-                                chart-series="['Data']"
-                                chart-options="options"></canvas>
+                        <nvd3 data="data[1]"></nvd3>
                     </md-tab>
                     <md-tab label="Speed">
-                        <canvas height="700" width="1300" class="chart chart-line"
-                                chart-data="[0,1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1,0]"
-                                chart-labels="[0,1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1,0]" chart-series="['Data']"
-                                chart-options="options"></canvas>
+                        <nvd3 data="data[2]"></nvd3>
                     </md-tab>
                 </md-tabs>
             </md-tab>
@@ -72,79 +56,27 @@
                 </p>
             </md-tab>
         </md-tabs>
-
-        <!--<div ng-show="currentNavItem == 1">
-            <md-tabs md-dynamic-height md-selected="selectedChart">
-                <md-tab label="Live Data">
-                    <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
-                    <canvas id="chart" height="700" width="1300" class="chart chart-line" chart-data="data"
-                            chart-labels="labels"
-                            chart-series="series" chart-options="options"></canvas>
-                </md-tab>
-                <md-tab label="Voltage">
-                    <canvas height="700" width="1300" class="chart chart-line"
-                            chart-data="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,46,36,3,52,43,6,4]"
-                            chart-labels="[5,6,7,8,97,5,43,2,4,5,36,57,7,3,2,42,446,36,3,52,43,6,4]"
-                            chart-series="['Data']"
-                            chart-options="options"></canvas>
-                </md-tab>
-                <md-tab label="Speed">
-                    <canvas height="700" width="1300" class="chart chart-line"
-                            chart-data="[0,1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1,0]"
-                            chart-labels="[0,1,2,3,4,5,6,7,8,9,8,7,6,5,4,3,2,1,0]" chart-series="['Data']"
-                            chart-options="options"></canvas>
-                </md-tab>
-            </md-tabs>
-
-
-            &lt;!&ndash;<div ng-show="dataFetch">
-                <md-button class="md-raised" ng-click="data = [[],[],[],[]]; labels = []">Clear Data</md-button>
-                <md-button class="md-raised" ng-click="addRand()">Push Random</md-button>
-
-
-            </div>&ndash;&gt;
-
-            &lt;!&ndash;<div class="chartWrapper" ng-show="dataFetch">
-                <div class="chartAreaWrapper">
-                    <canvas id="chart" height="700" width="1300" class="chart chart-line" chart-data="data"
-                            chart-labels="labels"
-                            chart-series="series" chart-options="options"></canvas>
-                </div>
-            </div>&ndash;&gt;
-        </div>-->
-
-        <!--<div ng-show="currentNavItem == 2">
-            <md-button class="md-raised md-primary" ng-click="getSavedData()">Get Saved Data</md-button>
-
-            <md-list ng-show="selectedData == undefined" flex>
-                <md-subheader class="md-no-sticky">Saved Data</md-subheader>
-                <md-list-item ng-repeat="dataSet in savedDataList track by $index" ng-click="selectDataSet(dataSet)">
-                    <div class="md-list-item-text">{{dataSet}}</div>
-                    <md-button class="md-raised md-warn" ng-click="renameFile(dataSet)">Rename File</md-button>
-                </md-list-item>
-            </md-list>
-
-            <p ng-show="selectedData != undefined">
-                {{selectedData}}
-            </p>
-        </div>-->
     </md-content>
 </div>
 
 
 <!-- Angular Material requires Angular.js Libraries -->
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+<!--<script src="bower_components/angular/angular.min.js"></script>-->
+<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
 
 <!-- Angular Material Library -->
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.js"></script>
 
-<!-- Angular Chart Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
-<script src="//cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+<!-- Angular nvD3 Library -->
+<script src="bower_components/d3/d3.js"></script>
+<script src="bower_components/nvd3/build/nv.d3.js"></script> <!-- or use another assembly -->
+<script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+<link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css">
 
 <script src="Client.js"></script>
 

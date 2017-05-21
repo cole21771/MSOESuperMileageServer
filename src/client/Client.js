@@ -2,48 +2,42 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ngMaterial', 'chart.js', 'ngMdIcons']);
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMdIcons', 'ngMaterial', 'nvd3']);
 
-angularApp.controller('angularController', function ($scope,socket) {
+angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {
     "use strict";
 
-    $scope.defaultData = [[],[],[],[],[],[]];
+    $scope.defaultData = [[], [], [], [], [], []];
     $scope.currentNavItem = 0;
 
-    $scope.labels = [];
-    $scope.series = ["Speed (MPH)", "RPM", "Joules", "Volts", "Current", "Lap #"];
-
     $scope.options = {
-        scales: {
-            yAxes: [{
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Values'
-                }
-            }],
-            xAxes: [{
-                scaleLabel: {
-                    display: true,
-                    labelString: 'Time (HH:MM:SS)'
-                }
-            }]
-        },
-        elements: {
-            line: {
-                tension: 0
-            }
-        },
-        responsive: false,
-        animation: false,
-        legend: {
-            display: true,
-            labels: {
-                fontColor: "#000080",
+        chart: {
+            type: 'lineChart',
+            height: 450,
+            margin : {
+                top: 20,
+                right: 20,
+                bottom: 60,
+                left: 55
+            },
+            x: function(d){ return d.label; },
+            y: function(d){ return d.value; },
+            showValues: true,
+            valueFormat: function(d){
+                return d3.format(',.4f')(d);
+            },
+            transitionDuration: 500,
+            xAxis: {
+                axisLabel: 'Time (HH:MM:SS)'
+            },
+            yAxis: {
+                axisLabel: 'Value',
+                axisLabelDistance: 30
             }
         }
     };
 
-    $scope.beginDataFetch = function() {
+    $scope.beginDataFetch = function () {
         $scope.data = $scope.defaultData;
 
         $scope.labels = [];
@@ -62,20 +56,20 @@ angularApp.controller('angularController', function ($scope,socket) {
         }
     }
 
-    $scope.stopDataFetch = function(){
+    $scope.stopDataFetch = function () {
         $scope.dataFetch = false;
-        $scope.data = [[],[],[],[]];
+        $scope.data = [[], [], [], []];
         $scope.labels = [];
         socket.removeListener("newData", parseData);
     };
 
-    $scope.leftSwipe = function() {
+    $scope.leftSwipe = function () {
         if ($scope.currentNavItem < 2) {
             $scope.currentNavItem++;
         }
     };
 
-    $scope.rightSwipe = function() {
+    $scope.rightSwipe = function () {
         if ($scope.currentNavItem > 0) {
             $scope.currentNavItem--;
         }
@@ -89,19 +83,19 @@ angularApp.controller('angularController', function ($scope,socket) {
     function addValuesToGraph(newData) {
         "use strict";
         if ($scope.data[0].length > 20) {
-            $scope.data.forEach(function(array){
+            $scope.data.forEach(function (array) {
                 array.shift();
             });
             $scope.labels.shift();
         }
 
-        $scope.data.forEach(function(array, index){
+        $scope.data.forEach(function (array, index) {
             array.push(newData[index]);
         });
         $scope.labels.push(new Date().toLocaleTimeString());
     }
 
-    $scope.getSavedData = function() {
+    $scope.getSavedData = function () {
         "use strict";
         $scope.selectedData = undefined;
         socket.emit('getSavedData');
@@ -112,7 +106,7 @@ angularApp.controller('angularController', function ($scope,socket) {
         $scope.savedDataList = savedData;
     });
 
-    $scope.selectDataSet = function(selectedDataSet) {
+    $scope.selectDataSet = function (selectedDataSet) {
         "use strict";
         socket.emit("retrieveDataSet", selectedDataSet);
     };
@@ -129,12 +123,12 @@ angularApp.controller('angularController', function ($scope,socket) {
         $scope.disconnected = true;
     });
 
-    $scope.renameFile = function(clickedDataSet) {
+    $scope.renameFile = function (clickedDataSet) {
         let invalidCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
         let hasInvalidCharacter = false;
 
         let newName = prompt('Please enter a new name for the file: (avoid using \\, /, :, *, ?, ", <, >, |)');
-        if (newName){
+        if (newName) {
             invalidCharacters.forEach((invalidChar) => {
                 if (newName.includes(invalidChar)) {
                     console.log(invalidChar);
@@ -160,7 +154,7 @@ angularApp.controller('angularController', function ($scope,socket) {
     });
 
 
-});
+}]);
 
 angularApp.factory('socket', function ($rootScope) {
     "use strict";
