@@ -1,21 +1,30 @@
 {
   "name": "super-milage-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Server for the MSOE SuperMilage vehicles",
   "main": "Server.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --optimize-minimize --progress --display-error-details"
   },
   "author": "Cole Abbeduto",
   "license": "ISC",
   "dependencies": {
+    "angular": "^1.6.1",
+    "angular-animate": "^1.6.1",
+    "angular-aria": "^1.6.1",
+    "angular-material": "^1.1.4",
+    "angular-messages": "^1.6.1",
+    "angular-nvd3": "^1.0.9",
     "body-parser": "^1.17.1",
     "ejs": "^2.5.6",
-    "epoch-charting": "^0.8.4",
     "express": "^4.15.2",
+    "fs": "0.0.1-security",
     "socket.io": "^2.0.1"
+  },
+  "devDependencies": {
+    "webpack": "^2.6.0"
   }
 }

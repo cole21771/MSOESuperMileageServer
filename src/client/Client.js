@@ -2,7 +2,7 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMdIcons', 'ngMaterial', 'nvd3']);
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3']);
 
 angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {
     "use strict";
@@ -14,16 +14,21 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
         chart: {
             type: 'lineChart',
             height: 450,
-            margin : {
+            margin: {
                 top: 20,
                 right: 20,
                 bottom: 60,
                 left: 55
             },
-            x: function(d){ return d.label; },
-            y: function(d){ return d.value; },
+            x: function (d) {
+                return d.label;
+            },
+            y: function (d) {
+                return d.value;
+            },
             showValues: true,
-            valueFormat: function(d){
+
+            valueFormat: function (d) {
                 return d3.format(',.4f')(d);
             },
             transitionDuration: 500,

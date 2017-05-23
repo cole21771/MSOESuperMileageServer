@@ -4,8 +4,11 @@
 
     <script src="/socket.io/socket.io.js"></script>
 
-    <!-- Angular Material style sheet -->
+    <!-- Beautiful Webpack -->
+    <script src="/dist/vendor.bundle.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+    <script src="/dist/app.bundle.js"></script>
+
     <link rel="stylesheet" href="Styles.css">
 </head>
 
@@ -13,7 +16,7 @@
 <div ng-controller="angularController">
     <md-content class="md-padding">
         <ng-md-icon style="float:right" icon="sync_problem" size="40" ng-show="disconnected"></ng-md-icon>
-        <md-tabs md-dynamic-height md-selected="currentNavItem" md-swipe-content="true">
+        <md-tabs md-dynamic-height md-selected="currentNavItem">
             <md-tab label="Main">
                 <hr>
                 <p>{{data[0]}}</p>
@@ -25,7 +28,7 @@
             </md-tab>
             <md-tab label="Charts">
                 <hr>
-                <md-tabs md-dynamic-height md-selected="selectedChart">
+                <md-tabs md-dynamic-height md-selected="selectedChart" md-swipe-content="true">
                     <md-tab label="Live Data">
                         <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
                         <nvd3 options="options" data="data[0]"></nvd3>
@@ -58,27 +61,5 @@
         </md-tabs>
     </md-content>
 </div>
-
-
-<!-- Angular Material requires Angular.js Libraries -->
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
-<!--<script src="bower_components/angular/angular.min.js"></script>-->
-<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>-->
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-material-icons/0.7.1/angular-material-icons.min.js"></script>
-
-<!-- Angular Material Library -->
-<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.js"></script>
-
-<!-- Angular nvD3 Library -->
-<script src="bower_components/d3/d3.js"></script>
-<script src="bower_components/nvd3/build/nv.d3.js"></script> <!-- or use another assembly -->
-<script src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
-<link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.css">
-
-<script src="Client.js"></script>
-
 </body>
 </html>
