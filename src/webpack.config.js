@@ -8,8 +8,7 @@ module.exports = {
             'angular-aria',
             'angular-messages',
             'angular-material',
-            'angular-nvd3',
-            'angular-material-icons']
+            'angular-nvd3']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
