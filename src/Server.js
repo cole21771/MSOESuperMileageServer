@@ -53,10 +53,20 @@ io.on('connection', (socket) => {
 
     socket.on("renameFile", (array) => {
         fs.renameSync(storage + array[0], storage + array[1]);
-        let files = fs.readdirSync(storage, "utf8");
-        socket.emit("savedDataList", files);
+        refreshData(socket);
+    });
+
+    socket.on("deleteFile", (fileName) => {
+        fs.unlinkSync(storage + fileName);
+        refreshData(socket);
     });
 });
+
+function refreshData(socket) {
+    "use strict";
+    let files = fs.readdirSync(storage, "utf8");
+    socket.emit("savedDataList", files);
+}
 
 function recordData(newData) {
     "use strict";

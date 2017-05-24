@@ -7,8 +7,47 @@ const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'n
 angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {
     "use strict";
 
-    $scope.defaultData = [[], [], [], [], [], []];
     $scope.currentNavItem = 0;
+    $scope.selectedChart = 0;
+
+    $scope.data = [
+        {
+            values: [],
+            key: 'Voltage',
+            color: '#f00',
+            area: true
+        },
+        {
+            values: [],             //values - represents the array of {x,y} data points
+            key: 'Speed',           //key  - the name of the series.
+            color: '#0f0',          //color - optional: choose your own line color.
+            area: true              //area - set to true if you want this line to turn into a filled area chart.
+        },
+        {
+            values: [],
+            key: 'Data 3',
+            color: '#00f',
+            area: true
+        },
+        {
+            values: [],
+            key: 'Data 4',
+            color: '#0ff',
+            area: true
+        },
+        {
+            values: [],
+            key: 'Data 5',
+            color: '#f0f',
+            area: true
+        },
+        {
+            values: [],
+            key: 'Data 6',
+            color: '#ff0',
+            area: true
+        }
+    ];
 
     $scope.options = {
         chart: {
@@ -21,83 +60,58 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
                 left: 55
             },
             x: function (d) {
-                return d.label;
+                return d.x;
             },
             y: function (d) {
-                return d.value;
+                return d.y;
             },
-            showValues: true,
-
-            valueFormat: function (d) {
-                return d3.format(',.4f')(d);
-            },
-            transitionDuration: 500,
+            useInteractiveGuideline: true,
+            duration: 0,
             xAxis: {
                 axisLabel: 'Time (HH:MM:SS)'
             },
             yAxis: {
-                axisLabel: 'Value',
-                axisLabelDistance: 30
+                axisLabel: 'Values'
+            }
+        },
+        title: {
+            enable: true,
+            text: 'Data Test 1',
+            css: {
+                'text-align': 'center'
             }
         }
     };
 
     $scope.beginDataFetch = function () {
-        $scope.data = $scope.defaultData;
-
-        $scope.labels = [];
-        $scope.dataFetch = true;
         socket.on("newData", parseData);
     };
 
     function parseData(newData) {
-        console.log(newData);
         if (newData !== null && newData !== undefined) {
 
             newData = JSON.parse(newData);
             if (Array.isArray(newData)) {
+                console.log(newData);
                 addValuesToGraph(newData);
             }
         }
     }
 
-    $scope.stopDataFetch = function () {
-        $scope.dataFetch = false;
-        $scope.data = [[], [], [], []];
-        $scope.labels = [];
-        socket.removeListener("newData", parseData);
-    };
-
-    $scope.leftSwipe = function () {
-        if ($scope.currentNavItem < 2) {
-            $scope.currentNavItem++;
-        }
-    };
-
-    $scope.rightSwipe = function () {
-        if ($scope.currentNavItem > 0) {
-            $scope.currentNavItem--;
-        }
-    };
-
-    $scope.addRand = function () {
-        "use strict";
-        addValuesToGraph([Math.random(), Math.random(), Math.random(), Math.random()]);
-    };
-
     function addValuesToGraph(newData) {
         "use strict";
-        if ($scope.data[0].length > 20) {
-            $scope.data.forEach(function (array) {
-                array.shift();
+
+        if ($scope.data[0].values.length > 20) {
+            $scope.data.forEach(function (graph) {
+                graph.values.shift();
             });
-            $scope.labels.shift();
         }
 
-        $scope.data.forEach(function (array, index) {
-            array.push(newData[index]);
+        $scope.data.forEach(function (graph, index) {
+            graph.values.push({x: new Date(), y: newData[index]});
         });
-        $scope.labels.push(new Date().toLocaleTimeString());
+
+        $scope.api[$scope.selectedChart].update();
     }
 
     $scope.getSavedData = function () {
@@ -148,6 +162,10 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
 
         } else
             alert("Can't be empty name!");
+    };
+
+    $scope.deleteFile = function (dataSet) {
+        socket.emit("deleteFile", dataSet);
     };
 
     socket.on("createdSavedDataFolder", () => {

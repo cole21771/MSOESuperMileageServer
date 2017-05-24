@@ -5,6 +5,7 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <!-- Beautiful Webpack -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css"/>
     <script src="/dist/vendor.bundle.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
     <script src="/dist/app.bundle.js"></script>
@@ -22,25 +23,37 @@
         <md-tabs md-dynamic-height md-selected="currentNavItem">
             <md-tab label="Main">
                 <hr> <!----------------------------------------->
-                <p>{{data[0]}}</p>
-                <p>{{data[1]}}</p>
-                <p>{{data[2]}}</p>
-                <p>{{data[3]}}</p>
-                <p>{{data[4]}}</p>
-                <p>{{data[5]}}</p>
+                <p>{{data[0].values}}</p>
+                <p>{{data[1].values}}</p>
+                <p>{{data[2].values}}</p>
+                <p>{{data[3].values}}</p>
+                <p>{{data[4].values}}</p>
+                <p>{{data[5].values}}</p>
             </md-tab>
             <md-tab label="Charts">
                 <hr> <!----------------------------------------->
-                <md-tabs md-dynamic-height md-selected="selectedChart" md-swipe-content="true">
-                    <md-tab label="Live Data">
+                <md-tabs md-dynamic-height md-selected="selectedChart">
+                    <md-tab label="All Graphs">
                         <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
-                        <nvd3 options="options" data="data[0]"></nvd3>
+                        <nvd3 options="options" data="data" api="api[0]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
                     <md-tab label="Voltage">
-                        <nvd3 data="data[1]"></nvd3>
+                        <nvd3 options="options" data="[data[0]]" api="api[1]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
                     <md-tab label="Speed">
-                        <nvd3 data="data[2]"></nvd3>
+                        <nvd3  options="options" data="[data[1]]" api="api[2]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                    </md-tab>
+                    <md-tab label="Data 3">
+                        <nvd3 options="options" data="[data[2]]" api="api[3]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                    </md-tab>
+                    <md-tab label="Data 4">
+                        <nvd3 options="options" data="[data[3]]" api="api[4]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                    </md-tab>
+                    <md-tab label="Data 5">
+                        <nvd3 options="options" data="[data[4]]" api="api[5]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                    </md-tab>
+                    <md-tab label="Data 6">
+                        <nvd3 options="options" data="[data[5]]" api="api[6]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
                 </md-tabs>
             </md-tab>
@@ -53,7 +66,8 @@
                     <md-list-item ng-repeat="dataSet in savedDataList track by $index"
                                   ng-click="selectDataSet(dataSet)">
                         <div class="md-list-item-text">{{dataSet}}</div>
-                        <md-button class="md-raised md-warn" ng-click="renameFile(dataSet)">Rename File</md-button>
+                        <md-button class="md-raised md-primary" ng-click="renameFile(dataSet)">Rename File</md-button>
+                        <md-button class="md-raised md-warn" ng-click="deleteFile(dataSet)">Delete</md-button>
                     </md-list-item>
                 </md-list>
 

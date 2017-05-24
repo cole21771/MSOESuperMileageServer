@@ -8,6 +8,7 @@ module.exports = {
             'angular-aria',
             'angular-messages',
             'angular-material',
+            'fastdom',
             'angular-nvd3']
     },
     output: {
