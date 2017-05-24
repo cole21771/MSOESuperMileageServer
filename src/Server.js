@@ -53,19 +53,23 @@ io.on('connection', (socket) => {
 
     socket.on("renameFile", (array) => {
         fs.renameSync(storage + array[0], storage + array[1]);
-        refreshData(socket);
+        refreshData(socket, io);
     });
 
     socket.on("deleteFile", (fileName) => {
         fs.unlinkSync(storage + fileName);
-        refreshData(socket);
+        refreshData(socket, io);
     });
 });
 
-function refreshData(socket) {
+function refreshData(socket, io) {
     "use strict";
+    io.emit("needRefresh");
     let files = fs.readdirSync(storage, "utf8");
-    socket.emit("savedDataList", files);
+    if (files.length !== 0)
+        socket.emit("savedDataList", files);
+    else
+        socket.emit("noSavedData");
 }
 
 function recordData(newData) {

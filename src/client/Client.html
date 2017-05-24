@@ -14,52 +14,58 @@
 </head>
 
 <body ng-app="angularApp" ng-cloak>
-<div ng-controller="angularController">
+<div ng-controller="angularController" ng-init="shouldRender = true">
     <md-content class="md-padding">
-        <svg fill="#000000" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg" style="float:right;" ng-show="disconnected">
+        <svg fill="#000000" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg"
+             style="float:right;" ng-show="disconnected">
             <path d="M0 0h24v24H0z" fill="none"></path>
             <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4c-1.48 0-2.85.43-4.01 1.17l1.46 1.46C10.21 6.23 11.08 6 12 6c3.04 0 5.5 2.46 5.5 5.5v.5H19c1.66 0 3 1.34 3 3 0 1.13-.64 2.11-1.56 2.62l1.45 1.45C23.16 18.16 24 16.68 24 15c0-2.64-2.05-4.78-4.65-4.96zM3 5.27l2.75 2.74C2.56 8.15 0 10.77 0 14c0 3.31 2.69 6 6 6h11.73l2 2L21 20.73 4.27 4 3 5.27zM7.73 10l8 8H6c-2.21 0-4-1.79-4-4s1.79-4 4-4h1.73z"></path>
         </svg>
         <md-tabs md-dynamic-height md-selected="currentNavItem">
             <md-tab label="Main">
                 <hr> <!----------------------------------------->
-                <p>{{data[0].values}}</p>
-                <p>{{data[1].values}}</p>
-                <p>{{data[2].values}}</p>
-                <p>{{data[3].values}}</p>
-                <p>{{data[4].values}}</p>
-                <p>{{data[5].values}}</p>
+                <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Fetching Data</md-button>
+                <table class="table-fill">
+                    <thead>
+                    <tr>
+                        <th class="text-left">Name</th>
+                        <th class="text-left">Timestamp</th>
+                        <th class="text-left">Latest Value</th>
+                    </tr>
+                    </thead>
+                    <tbody class="table-hover">
+                    <tr ng-repeat="graphData in data track by $index">
+                        <td class="text-left">{{graphData.key}}</td>
+                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}</td>
+                        <td class="text-left">{{graphData.values[graphData.values.length - 1].y}}</td>
+                    </tr>
+                    </tbody>
+                </table>
             </md-tab>
             <md-tab label="Charts">
                 <hr> <!----------------------------------------->
                 <md-tabs md-dynamic-height md-selected="selectedChart">
                     <md-tab label="All Graphs">
-                        <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Data Fetch</md-button>
-                        <nvd3 options="options" data="data" api="api[0]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                        <nvd3 options="options" data="data" api="api[0]"
+                              config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
-                    <md-tab label="Voltage">
-                        <nvd3 options="options" data="[data[0]]" api="api[1]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab label="Speed">
-                        <nvd3  options="options" data="[data[1]]" api="api[2]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab label="Data 3">
-                        <nvd3 options="options" data="[data[2]]" api="api[3]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab label="Data 4">
-                        <nvd3 options="options" data="[data[3]]" api="api[4]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab label="Data 5">
-                        <nvd3 options="options" data="[data[4]]" api="api[5]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab label="Data 6">
-                        <nvd3 options="options" data="[data[5]]" api="api[6]" config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                    <md-tab ng-repeat="graphData in data track by $index" label="{{graphData.key}}">
+                        <nvd3 options="options" data="[graphData]" api="api[$index + 1]"
+                              config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
                 </md-tabs>
+                <md-button ng-show="shouldRender" class="md-raised md-warn" ng-click="shouldRender = false">Pause
+                </md-button>
+                <md-button ng-hide="shouldRender" class="md-raised md-warn" ng-click="shouldRender = true">Play
+                </md-button>
             </md-tab>
             <md-tab label="Review Saved Data">
                 <hr> <!----------------------------------------->
                 <md-button class="md-raised md-primary" ng-click="getSavedData()">Get Saved Data</md-button>
+                <svg fill="#000000" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg" ng-show="needRefresh">
+                    <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"></path>
+                    <path d="M0 0h24v24H0z" fill="none"></path>
+                </svg>
 
                 <md-list ng-show="selectedData == undefined" flex>
                     <md-subheader class="md-no-sticky">Saved Data</md-subheader>

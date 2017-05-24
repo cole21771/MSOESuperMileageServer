@@ -13,38 +13,38 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
     $scope.data = [
         {
             values: [],
-            key: 'Voltage',
+            key: 'Speed',
             color: '#f00',
             area: true
         },
         {
             values: [],             //values - represents the array of {x,y} data points
-            key: 'Speed',           //key  - the name of the series.
+            key: 'Engine Temp',           //key  - the name of the series.
             color: '#0f0',          //color - optional: choose your own line color.
             area: true              //area - set to true if you want this line to turn into a filled area chart.
         },
         {
             values: [],
-            key: 'Data 3',
+            key: 'Lap Number',
             color: '#00f',
             area: true
         },
         {
             values: [],
-            key: 'Data 4',
+            key: 'AFR',
             color: '#0ff',
             area: true
         },
         {
             values: [],
-            key: 'Data 5',
+            key: 'Throttle Position',
             color: '#f0f',
             area: true
         },
         {
             values: [],
-            key: 'Data 6',
-            color: '#ff0',
+            key: 'Motor RPM',
+            color: '#ff7f00',
             area: true
         }
     ];
@@ -55,9 +55,9 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             height: 450,
             margin: {
                 top: 20,
-                right: 20,
+                right: 50,
                 bottom: 60,
-                left: 55
+                left: 75
             },
             x: function (d) {
                 return d.x;
@@ -68,17 +68,13 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             useInteractiveGuideline: true,
             duration: 0,
             xAxis: {
-                axisLabel: 'Time (HH:MM:SS)'
+                axisLabel: 'Time (HH:MM:SS)',
+                tickFormat: function (d) {
+                    return new Date(d).toLocaleTimeString();
+                }
             },
             yAxis: {
                 axisLabel: 'Values'
-            }
-        },
-        title: {
-            enable: true,
-            text: 'Data Test 1',
-            css: {
-                'text-align': 'center'
             }
         }
     };
@@ -111,7 +107,8 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             graph.values.push({x: new Date(), y: newData[index]});
         });
 
-        $scope.api[$scope.selectedChart].update();
+        if ($scope.shouldRender && $scope.currentNavItem === 1)
+            $scope.api[$scope.selectedChart].update();
     }
 
     $scope.getSavedData = function () {
@@ -122,6 +119,7 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
 
     socket.on("savedDataList", (savedData) => {
         "use strict";
+        $scope.needRefresh = false;
         $scope.savedDataList = savedData;
     });
 
@@ -146,7 +144,7 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
         let invalidCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
         let hasInvalidCharacter = false;
 
-        let newName = prompt('Please enter a new name for the file: (avoid using \\, /, :, *, ?, ", <, >, |)');
+        let newName = prompt('Please enter a new name for the file: (avoid using \\, /, :, *, ?, ", <, >, |)', clickedDataSet);
         if (newName) {
             invalidCharacters.forEach((invalidChar) => {
                 if (newName.includes(invalidChar)) {
@@ -169,13 +167,18 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
     };
 
     socket.on("createdSavedDataFolder", () => {
+        $scope.needRefresh = false;
         alert("Folder 'savedData/' did not exist, now it does.");
     });
 
     socket.on("noSavedData", () => {
+        $scope.needRefresh = false;
         alert("No save data found!");
     });
 
+    socket.on("needRefresh", () => {
+        $scope.needRefresh = true;
+    });
 
 }]);
 
