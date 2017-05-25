@@ -2,7 +2,15 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3']);
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3'])
+    .config(function($mdThemingProvider){
+        "use strict";
+
+        $mdThemingProvider.theme('default')
+            .primaryPalette('blue')
+            .dark();
+
+    });
 
 angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {
     "use strict";
