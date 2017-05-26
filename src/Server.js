@@ -7,6 +7,8 @@ let io = require('socket.io')(server);
 
 let path = require('path');
 
+app.use(require('compression')());
+
 app.set('views', path.join(__dirname, 'client'));
 app.set('view engine', 'ejs');	//	template system
 app.engine('html', require('ejs').renderFile);
