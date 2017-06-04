@@ -251,8 +251,27 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
      * @param filename the clicked filename
      */
     $scope.retrieveCSV = function (filename) {
-        socket.emit("retrieveCSV", filename);
-    }
+        let labels = [];
+
+        $scope.data.forEach((graphData) => {
+            labels.push(graphData.key);
+        });
+
+        socket.emit("getCSV", {filename: filename, labels: labels});
+    };
+
+    socket.on("convertedCSVFile", (convertedFile) => {
+        let element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(convertedFile.data));
+        element.setAttribute('download', convertedFile.filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    });
 
 }]);
 

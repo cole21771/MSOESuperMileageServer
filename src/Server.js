@@ -75,8 +75,8 @@ io.on('connection', (socket) => {
      * A listener for when the client asks for a specific file, it returns the file that was
      * selected
      */
-    socket.on("retrieveFile", (fileName) => {
-        let data = fs.readFileSync(storage + fileName, "utf8");
+    socket.on("retrieveFile", (filename) => {
+        let data = fs.readFileSync(storage + filename, "utf8");
         socket.emit("requestedFile", data);
     });
 
@@ -92,9 +92,33 @@ io.on('connection', (socket) => {
     /**
      * Allows the client to delete a file by emitting a 'deleteFile' event
      */
-    socket.on("deleteFile", (fileName) => {
-        fs.unlinkSync(storage + fileName);
+    socket.on("deleteFile", (filename) => {
+        fs.unlinkSync(storage + filename);
         refreshData(socket, io);
+    });
+
+    /**
+     * A listener for when a client asks for a file to be converted to a csv format
+     */
+    socket.on("getCSV", (data) => {
+        "use strict";
+        let filename = data.filename, labels = data.labels;
+
+        let fileData = JSON.parse(fs.readFileSync(storage + filename, "utf8"));
+        if (Array.isArray(fileData)) {
+            let convertedData = "Time, ";
+
+            if (Array.isArray(labels))
+                convertedData += labels.join(',') + "\n";
+
+            let firstTime = new Date(fileData[0].timeStamp).getTime();
+            fileData.forEach((dataPoint) => {
+                convertedData += (new Date(dataPoint.timeStamp).getTime() - firstTime) + ", " + JSON.parse(dataPoint.data).join(',') + "\n";
+            });
+
+            socket.emit("convertedCSVFile", {data: convertedData, filename: filename.slice(0, filename.indexOf('.')) + '.csv'})
+        } else
+            socket.emit("dataUnreadable", filename);
     });
 });
 
