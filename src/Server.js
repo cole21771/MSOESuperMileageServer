@@ -122,6 +122,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on("newLocation", (locationObject) => {
+        console.log(locationObject);
     });
 });
 
