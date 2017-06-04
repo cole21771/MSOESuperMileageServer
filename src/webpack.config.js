@@ -9,7 +9,8 @@ module.exports = {
             'angular-messages',
             'angular-material',
             'fastdom',
-            'angular-nvd3']
+            'angular-nvd3',
+            'google-maps']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
