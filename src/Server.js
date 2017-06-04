@@ -120,6 +120,9 @@ io.on('connection', (socket) => {
         } else
             socket.emit("dataUnreadable", filename);
     });
+
+    socket.on("newLocation", (locationObject) => {
+    });
 });
 
 /**
