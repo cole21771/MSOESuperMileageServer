@@ -2,15 +2,16 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3'])
-    .config(function($mdThemingProvider){
-        "use strict";
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3']);
 
-        $mdThemingProvider.theme('default')
-            .primaryPalette('blue')
-            .dark();
+//Sets the theme to a dark theme of the default theme (but with a blue accent palette)
+angularApp.config(function ($mdThemingProvider) {
+    "use strict";
 
-    });
+    $mdThemingProvider.theme('default')
+        .primaryPalette('blue')
+        .dark();
+});
 
 angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {
     "use strict";
@@ -23,38 +24,41 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             values: [],
             key: 'Speed',
             color: '#f00',
-            area: true
+            area: true,
+            display: true
         },
         {
             values: [],             //values - represents the array of {x,y} data points
-            key: 'Engine Temp',           //key  - the name of the series.
+            key: 'Engine Temp',     //key  - the name of the series.
             color: '#0f0',          //color - optional: choose your own line color.
-            area: true              //area - set to true if you want this line to turn into a filled area chart.
+            area: true,             //area - set to true if you want this line to turn into a filled area chart.
+            display: true
         },
         {
             values: [],
             key: 'Lap Number',
             color: '#00f',
-            area: true
-        },
-        {
-            values: [],
-            key: 'AFR',
-            color: '#0ff',
-            area: true
-        },
-        {
-            values: [],
-            key: 'Throttle Position',
-            color: '#f0f',
-            area: true
-        },
-        {
-            values: [],
-            key: 'Motor RPM',
-            color: '#ff7f00',
-            area: true
-        }
+            area: true,
+            display: false
+        }/*,
+         {
+         values: [],
+         key: 'AFR',
+         color: '#0ff',
+         area: true
+         },
+         {
+         values: [],
+         key: 'Throttle Position',
+         color: '#f0f',
+         area: true
+         },
+         {
+         values: [],
+         key: 'Motor RPM',
+         color: '#ff7f00',
+         area: true
+         }*/
     ];
 
     $scope.options = {
@@ -119,40 +123,69 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             $scope.api[$scope.selectedChart].update();
     }
 
+    /**
+     * Gets the list of files from the saveData folder
+     */
     $scope.getSavedData = function () {
         "use strict";
         $scope.selectedData = undefined;
         socket.emit('getSavedData');
     };
 
+    /**
+     * Listening for the list of files from the saveData folder. When it gets it,
+     * it will set the savedDataList equal to the array response from the server
+     */
     socket.on("savedDataList", (savedData) => {
         "use strict";
         $scope.needRefresh = false;
         $scope.savedDataList = savedData;
     });
 
-    $scope.selectDataSet = function (selectedDataSet) {
+    /**
+     * Emits a call to the server for when a filename is clicked from the list
+     *
+     * @param selectedFilename is the filename that was clicked on from the md-list
+     */
+    $scope.selectDataSet = function (selectedFilename) {
         "use strict";
-        socket.emit("retrieveDataSet", selectedDataSet);
+        socket.emit("retrieveFile", selectedFilename);
     };
 
-    socket.on("dataSet", (data) => {
+    /**
+     * A listener for when the server sends the actual contents of a selected file over
+     */
+    socket.on("requestedFile", (data) => {
         $scope.selectedData = data;
     });
 
+    /**
+     * When the client is connected it disables the offline svg
+     */
     socket.on('connect', () => {
         $scope.disconnected = false;
     });
 
+    /**
+     * When the client is disconnected it shows the offline svg
+     */
     socket.on('disconnect', () => {
         $scope.disconnected = true;
     });
 
-    $scope.renameFile = function (clickedDataSet) {
+    /**
+     * When you click the renameFile button, this function is called.
+     *
+     * It opens a prompt and allows you to enter a new filename for the file and makes sure
+     * you don't put in any invalid characters.
+     *
+     * @param clickedFilename is the filename that was clicked
+     */
+    $scope.renameFile = function (clickedFilename) {
         let invalidCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
         let hasInvalidCharacter = false;
 
-        let newName = prompt('Please enter a new name for the file: (avoid using \\, /, :, *, ?, ", <, >, |)', clickedDataSet);
+        let newName = prompt('Please enter a new name for the file: (avoid using \\, /, :, *, ?, ", <, >, |)', clickedFilename);
         if (newName) {
             invalidCharacters.forEach((invalidChar) => {
                 if (newName.includes(invalidChar)) {
@@ -163,33 +196,70 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
 
             if (hasInvalidCharacter)
                 alert("Please don't use invalid characters: " + invalidCharacters);
+            else if (newName.includes("."))
+                socket.emit("renameFile", [clickedFilename, newName]);
             else
-                socket.emit("renameFile", [clickedDataSet, newName]);
+                socket.emit("renameFile", [clickedFilename, newName + ".smv"]);
 
         } else
             alert("Can't be empty name!");
     };
 
+    /**
+     * This function is called when you click the delete button on a filename from
+     * the md-list element
+     *
+     * @param dataSet is the file to be deleted by the server
+     */
     $scope.deleteFile = function (dataSet) {
         socket.emit("deleteFile", dataSet);
     };
 
+    /**
+     * Serves as a notification that the server created the saveData folder as it
+     * did not previously exist
+     */
     socket.on("createdSavedDataFolder", () => {
         $scope.needRefresh = false;
         alert("Folder 'savedData/' did not exist, now it does.");
     });
 
+    /**
+     * When you click the 'Get Saved Data' button and there is no save data to return,
+     * the server emits a 'noSavedData' call in order to notify the client that there
+     * was 'No save data found!'
+     */
     socket.on("noSavedData", () => {
         $scope.needRefresh = false;
         alert("No save data found!");
     });
 
+    /**
+     * When a client makes a change to the savedData folder such as renaming or deleting a file, this
+     * 'needRefresh' event is called so that other clients are notified that before doing anything else,
+     * they should refresh the list of saved data by clicking the 'Get Saved Data' button again.
+     */
     socket.on("needRefresh", () => {
         $scope.needRefresh = true;
     });
 
+    /**
+     * When you click the retrieveCSV button on a filename in the md-list for the list of
+     * saved data, this is called so it can send a message to the server that the client
+     * wants the data downloaded in a csv format
+     *
+     * @param filename the clicked filename
+     */
+    $scope.retrieveCSV = function (filename) {
+        socket.emit("retrieveCSV", filename);
+    }
+
 }]);
 
+/**
+ * Creates an angular variable factory thingy for the socket so it updates the scope ($scope.apply)
+ * when you receive an event or send one
+ */
 angularApp.factory('socket', function ($rootScope) {
     "use strict";
     let socket = io.connect();

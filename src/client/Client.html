@@ -23,7 +23,7 @@
         </svg>
         <md-tabs md-dynamic-height md-selected="currentNavItem">
             <md-tab label="Main">
-                <hr> <!----------------------------------------->
+                <hr> <!------------------------------------------------------------------------------------------------>
                 <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Fetching Data</md-button>
                 <table class="table-fill">
                     <thead>
@@ -34,25 +34,26 @@
                     </tr>
                     </thead>
                     <tbody class="table-hover">
-                    <tr ng-repeat="graphData in data track by $index">
+                    <tr ng-repeat="graphData in data track by $index" ng-show="graphData.display">
                         <td class="text-left">{{graphData.key}}</td>
-                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}</td>
+                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}
+                        </td>
                         <td class="text-left">{{graphData.values[graphData.values.length - 1].y}}</td>
                     </tr>
                     </tbody>
                 </table>
             </md-tab>
             <md-tab label="Charts">
-                <hr> <!----------------------------------------->
+                <hr> <!------------------------------------------------------------------------------------------------>
                 <md-tabs md-dynamic-height md-selected="selectedChart">
                     <md-tab label="All Graphs">
                         <nvd3 options="options" data="data" api="api[0]"
                               config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
-                    <md-tab ng-repeat="graphData in data track by $index" label="{{graphData.key}}">
-                        <nvd3 options="options" data="[graphData]" api="api[$index + 1]"
-                              config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
+                        <md-tab ng-repeat="graphData in data track by $index" ng-disabled="!graphData.display" label="{{graphData.key}}">
+                            <nvd3 options="options" data="[graphData]" api="api[$index + 1]"
+                                  config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                        </md-tab>
                 </md-tabs>
                 <md-button ng-show="shouldRender" class="md-raised md-warn" ng-click="shouldRender = false">Pause
                 </md-button>
@@ -60,20 +61,22 @@
                 </md-button>
             </md-tab>
             <md-tab label="Review Saved Data">
-                <hr> <!----------------------------------------->
+                <hr> <!------------------------------------------------------------------------------------------------>
                 <md-button class="md-raised md-primary" ng-click="getSavedData()">Get Saved Data</md-button>
-                <svg fill="#fff" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg" ng-show="needRefresh">
+                <svg fill="#fff" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg"
+                     ng-show="needRefresh">
                     <path d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8c-.45-.83-.7-1.79-.7-2.8 0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"></path>
                     <path d="M0 0h24v24H0z" fill="none"></path>
                 </svg>
 
-                <md-list ng-show="selectedData == undefined" flex>
+                <md-list ng-show="selectedData == undefined">
                     <md-subheader class="md-no-sticky">Saved Data</md-subheader>
-                    <md-list-item ng-repeat="dataSet in savedDataList track by $index"
-                                  ng-click="selectDataSet(dataSet)">
-                        <div class="md-list-item-text">{{dataSet}}</div>
-                        <md-button class="md-raised md-primary" ng-click="renameFile(dataSet)">Rename File</md-button>
-                        <md-button class="md-raised md-warn" ng-click="deleteFile(dataSet)">Delete</md-button>
+                    <md-list-item ng-repeat="fileName in savedDataList track by $index"
+                                  ng-click="selectDataSet(fileName)">
+                        <div class="md-list-item-text">{{fileName}}</div>
+                        <md-button class="md-raised md-primary" ng-click="renameFile(fileName)">Rename File</md-button>
+                        <md-button class="md-raised md-warn" ng-click="deleteFile(fileName)">Delete</md-button>
+                        <md-button class="md-raised md-primary" ng-click="retrieveCSV(fileName)">Download as '.csv'</md-button>
                     </md-list-item>
                 </md-list>
 
@@ -82,6 +85,9 @@
                 </p>
             </md-tab>
         </md-tabs>
+        <svg fill="#fff">
+            <circle r="20"></circle>
+        </svg>
     </md-content>
 </div>
 </body>
