@@ -93,6 +93,7 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
 
     $scope.beginDataFetch = function () {
         socket.on("newData", parseData);
+        socket.on("newLocation", parseLocation);
     };
 
     function parseData(newData) {
@@ -104,6 +105,12 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
                 addValuesToGraph(newData);
             }
         }
+    }
+
+    function parseLocation(location) {
+        let location = JSON.parse(location);
+
+        $scope.currentLocation = location;
     }
 
     function addValuesToGraph(newData) {

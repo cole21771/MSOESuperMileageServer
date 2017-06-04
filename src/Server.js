@@ -33,6 +33,8 @@ let fs = require('fs');
  */
 let fullDataSet = [];
 
+let locationDataSet = [];
+
 /**
  * Just a const so that I don't have to type 'savedData/' every time I want to access
  * that folder. Also it makes it easier to change if I want to in the future
@@ -122,7 +124,9 @@ io.on('connection', (socket) => {
     });
 
     socket.on("newLocation", (locationObject) => {
-        console.log(locationObject);
+        let location = new Location(locationObject);
+        recordLocation(location);
+        io.emit(location);
     });
 });
 
@@ -151,6 +155,10 @@ function refreshData(socket, io) {
 function recordData(newData) {
     "use strict";
     fullDataSet.push(new DataPoint(newData));
+}
+
+function recordLocation(location) {
+    locationDataSet.push(location);
 }
 
 /**
@@ -202,4 +210,10 @@ function DataPoint(data) {
     "use strict";
     this.data = data;
     this.timeStamp = new Date();
+}
+
+function Location(data) {
+    this.latitude = data[0];
+    this.longitude = data[1];
+    this.altitude = data[2];
 }
