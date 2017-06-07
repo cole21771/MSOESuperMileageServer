@@ -6,12 +6,16 @@ const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'n
 let map = null;
 
 //Sets the theme to a dark theme of the default theme (but with a blue accent palette)
-angularApp.config(function ($mdThemingProvider) {
+angularApp.config(function ($mdThemingProvider, gmLibraryProvider) {
     "use strict";
 
     $mdThemingProvider.theme('default')
         .primaryPalette('blue')
         .dark();
+
+    gmLibraryProvider.configure({
+        key: 'AIzaSyAiY0eUkZA9ZIr-HNUauRWqrqyYwTOywfA'
+    });
 });
 
 angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {

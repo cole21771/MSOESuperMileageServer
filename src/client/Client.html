@@ -61,8 +61,7 @@
             </md-tab>
             <md-tab label="Map">
                 <hr> <!------------------------------------------------------------------------------------------------>
-                <gm-map options="{center: [37.772323, -122.214897], zoom: 4, mapTypeId: google.maps.MapTypeId.ROADMAP}">
-                    <gm-marker options="{position:  [40.750, -73], draggable: true}"></gm-marker>
+                <gm-map id="map" options="{center: [37.772323, -122.214897], zoom: 4, mapTypeId: google.maps.MapTypeId.ROADMAP}">
                     <gm-marker ng-repeat="location in locations" options="{position: [{{location.latitude}}, {{location.longitude}}]}"
                 </gm-map>
             </md-tab>
