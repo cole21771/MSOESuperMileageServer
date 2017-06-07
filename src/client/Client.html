@@ -61,8 +61,9 @@
             </md-tab>
             <md-tab label="Map">
                 <hr> <!------------------------------------------------------------------------------------------------>
-                <gm-map id="map" options="{center: [37.772323, -122.214897], zoom: 4, mapTypeId: google.maps.MapTypeId.ROADMAP}">
-                    <gm-marker ng-repeat="location in locations" options="{position: [{{location.latitude}}, {{location.longitude}}]}"
+                <gm-map id="map" options="{center: [42.223423, -84.917022], zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP}">
+                    <gm-marker options="{position: [42.223423, -84.917022]}"></gm-marker>
+                    <gm-marker ng-repeat="location in locations" options="{position: [{{location.latitude}}, {{location.longitude}}]}"></gm-marker>
                 </gm-map>
             </md-tab>
             <md-tab label="Review Saved Data">
