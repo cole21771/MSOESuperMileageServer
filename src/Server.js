@@ -126,7 +126,7 @@ io.on('connection', (socket) => {
     socket.on("newLocation", (locationObject) => {
         let location = new Location(locationObject);
         recordLocation(location);
-        io.emit(location);
+        //io.emit(location);
     });
 });
 

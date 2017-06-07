@@ -29,16 +29,15 @@
                     <thead>
                     <tr>
                         <th class="text-left">Name</th>
-                        <th class="text-left">Timestamp</th>
                         <th class="text-left">Latest Value</th>
+                        <th class="text-left">Timestamp</th>
                     </tr>
                     </thead>
                     <tbody class="table-hover">
-                    <tr ng-repeat="graphData in data track by $index" ng-show="graphData.display">
+                    <tr ng-repeat="graphData in data track by $index" ng-hide="graphData.disabled">
                         <td class="text-left">{{graphData.key}}</td>
-                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}
-                        </td>
                         <td class="text-left">{{graphData.values[graphData.values.length - 1].y}}</td>
+                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -47,11 +46,11 @@
                 <hr> <!------------------------------------------------------------------------------------------------>
                 <md-tabs md-dynamic-height md-selected="selectedChart">
                     <md-tab label="All Graphs">
-                        <nvd3 options="options" data="data" api="api[0]"
+                        <nvd3 options="options" data="data" api="api[0]" style="fill:#fff;"
                               config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
-                        <md-tab ng-repeat="graphData in data track by $index" ng-disabled="!graphData.display" label="{{graphData.key}}">
-                            <nvd3 options="options" data="[graphData]" api="api[$index + 1]"
+                        <md-tab ng-repeat="graphData in data track by $index" ng-disabled="graphData.disabled" label="{{graphData.key}}">
+                            <nvd3 options="options" data="[graphData]" api="api[$index + 1]" style="fill:#fff;"
                                   config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                         </md-tab>
                 </md-tabs>

@@ -25,21 +25,21 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             key: 'Speed',
             color: '#f00',
             area: true,
-            display: true
+            disabled: false
         },
         {
             values: [],             //values - represents the array of {x,y} data points
             key: 'Engine Temp',     //key  - the name of the series.
             color: '#0f0',          //color - optional: choose your own line color.
             area: true,             //area - set to true if you want this line to turn into a filled area chart.
-            display: true
+            disabled: false
         },
         {
             values: [],
-            key: 'Lap Number',
+            key: 'Lap Number: ' + Math.random(),
             color: '#00f',
             area: true,
-            display: false
+            disabled: true
         }/*,
          {
          values: [],
@@ -103,14 +103,14 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             if (Array.isArray(newData)) {
                 console.log(newData);
                 addValuesToGraph(newData);
+                $scope.data[2].key = 'Lap Number: ' + newData[2];
             }
+
         }
     }
 
     function parseLocation(location) {
-        let location = JSON.parse(location);
-
-        $scope.currentLocation = location;
+        $scope.currentLocation = JSON.parse(location);
     }
 
     function addValuesToGraph(newData) {
