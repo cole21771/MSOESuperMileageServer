@@ -10,7 +10,7 @@ module.exports = {
             'angular-material',
             'fastdom',
             'angular-nvd3',
-            'google-maps']
+            'angular-google-maps-native']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

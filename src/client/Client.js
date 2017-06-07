@@ -2,7 +2,8 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3']);
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3', 'GoogleMapsNative']);
+let map = null;
 
 //Sets the theme to a dark theme of the default theme (but with a blue accent palette)
 angularApp.config(function ($mdThemingProvider) {
@@ -110,7 +111,8 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
     }
 
     function parseLocation(location) {
-        $scope.currentLocation = JSON.parse(location);
+        console.log(location);
+        $scope.locations.push(location);
     }
 
     function addValuesToGraph(newData) {

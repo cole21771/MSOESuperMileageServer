@@ -118,15 +118,22 @@ io.on('connection', (socket) => {
                 convertedData += (new Date(dataPoint.timeStamp).getTime() - firstTime) + ", " + JSON.parse(dataPoint.data).join(',') + "\n";
             });
 
-            socket.emit("convertedCSVFile", {data: convertedData, filename: filename.slice(0, filename.indexOf('.')) + '.csv'})
+            socket.emit("convertedCSVFile", {
+                data: convertedData,
+                filename: filename.slice(0, filename.indexOf('.')) + '.csv'
+            })
         } else
             socket.emit("dataUnreadable", filename);
     });
 
-    socket.on("newLocation", (locationObject) => {
-        let location = new Location(locationObject);
-        recordLocation(location);
-        //io.emit(location);
+    socket.on("newLocation", (locationArray) => {
+        let location = JSON.parse(locationArray);
+
+        if (Array.isArray(location)) {
+            location = new Location(location);
+            recordLocation(location);
+            io.emit("newLocation", location);
+        }
     });
 });
 
@@ -181,13 +188,13 @@ function exitHandler(options, err) {
 }
 
 //do something when app is closing
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
+process.on('exit', exitHandler.bind(null, {cleanup: true}));
 
 //catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
+process.on('SIGINT', exitHandler.bind(null, {exit: true}));
 
 //catches uncaught exceptions
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+process.on('uncaughtException', exitHandler.bind(null, {exit: true}));
 
 let port = 3000;
 

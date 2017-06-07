@@ -14,7 +14,7 @@
 </head>
 
 <body ng-app="angularApp" ng-cloak>
-<div ng-controller="angularController" ng-init="shouldRender = true">
+<div ng-controller="angularController" ng-init="shouldRender = true; locations = []">
     <md-content class="md-padding">
         <svg fill="#fff" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg"
              style="float:right;" ng-show="disconnected">
@@ -58,6 +58,13 @@
                 </md-button>
                 <md-button ng-hide="shouldRender" class="md-raised md-warn" ng-click="shouldRender = true">Play
                 </md-button>
+            </md-tab>
+            <md-tab label="Map">
+                <hr> <!------------------------------------------------------------------------------------------------>
+                <gm-map options="{center: [37.772323, -122.214897], zoom: 4, mapTypeId: google.maps.MapTypeId.ROADMAP}">
+                    <gm-marker options="{position:  [40.750, -73], draggable: true}"></gm-marker>
+                    <gm-marker ng-repeat="location in locations" options="{position: [{{location.latitude}}, {{location.longitude}}]}"
+                </gm-map>
             </md-tab>
             <md-tab label="Review Saved Data">
                 <hr> <!------------------------------------------------------------------------------------------------>
