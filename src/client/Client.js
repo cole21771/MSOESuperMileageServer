@@ -143,8 +143,6 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
                 console.log(newData);
                 addValuesToGraph(newData);
 
-                $scope.data[0].key = 'Speed: ' + newData[0];
-                $scope.data[1].key = 'Engine Temp: ' + newData[1];
                 $scope.data[2].key = 'Lap Number: ' + newData[2];
 
                 if ($scope.currentLap !== newData[2]) {
