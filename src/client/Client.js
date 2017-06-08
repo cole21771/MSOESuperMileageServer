@@ -114,9 +114,14 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
         }
     }
 
+    $scope.currentLocation = [[40.223423, -84.917022]];
+
     function parseLocation(location) {
         console.log(location);
-        $scope.locations.push(location);
+        //console.log(document.getElementById('map'));
+        //$scope.polylineLocations.push([$scope.currentLocation.latitude, $scope.currentLocation.longitude]);
+        $scope.currentLocation.shift();
+        $scope.currentLocation.push([location.latitude, location.longitude]);
     }
 
     function addValuesToGraph(newData) {

@@ -63,7 +63,8 @@
                 <hr> <!------------------------------------------------------------------------------------------------>
                 <gm-map id="map" options="{center: [42.223423, -84.917022], zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP}">
                     <gm-marker options="{position: [42.223423, -84.917022]}"></gm-marker>
-                    <gm-marker ng-repeat="location in locations" options="{position: [{{location.latitude}}, {{location.longitude}}]}"></gm-marker>
+                    <!--<gm-polyline options-->
+                    <gm-marker ng-repeat="location in currentLocation" options="{position: {{location}}}"></gm-marker>
                 </gm-map>
             </md-tab>
             <md-tab label="Review Saved Data">
