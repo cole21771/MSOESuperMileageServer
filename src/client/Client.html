@@ -5,6 +5,7 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <!-- Beautiful Webpack -->
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyDHxzhvol-ADeAmPe1HDo8zsfbpP3iIU88"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css"/>
     <script src="/dist/vendor.bundle.js"></script>
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
@@ -59,13 +60,18 @@
                 <md-button ng-hide="shouldRender" class="md-raised md-warn" ng-click="shouldRender = true">Play
                 </md-button>
             </md-tab>
-            <md-tab label="Map">
+            <md-tab label="Map" md-on-select="resizeMap()">
                 <hr> <!------------------------------------------------------------------------------------------------>
-                <gm-map id="map" options="{center: [42.223423, -84.917022], zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP}">
+                <!--<gm-map id="map" options="{zoom: 8, center: [42.223423, -84.917022], mapTypeId: google.maps.MapTypeId.ROADMAP}">
                     <gm-marker options="{position: [42.223423, -84.917022]}"></gm-marker>
-                    <!--<gm-polyline options-->
+                    &lt;!&ndash;<gm-polyline options&ndash;&gt;
                     <gm-marker ng-repeat="location in currentLocation" options="{position: {{location}}}"></gm-marker>
-                </gm-map>
+                </gm-map>-->
+                <ng-map id="map" style="height: 80%" zoom="15" center="[42.223423, -84.917022]">
+                    <marker position="[42.223423, -84.917022]"></marker>
+                    <marker position="{{currentLocation}}"></marker>
+                    <shape name="polyline" path="{{polylineLocations}}" stroke-color="{{currentColor}}"></shape>
+                </ng-map>
             </md-tab>
             <md-tab label="Review Saved Data">
                 <hr> <!------------------------------------------------------------------------------------------------>

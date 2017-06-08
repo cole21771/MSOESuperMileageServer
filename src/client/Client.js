@@ -2,24 +2,58 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3', 'GoogleMapsNative']);
-let map = null;
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3', 'ngMap']);
 
 //Sets the theme to a dark theme of the default theme (but with a blue accent palette)
-angularApp.config(function ($mdThemingProvider, gmLibraryProvider) {
+angularApp.config(function ($mdThemingProvider) {
     "use strict";
 
     $mdThemingProvider.theme('default')
         .primaryPalette('blue')
         .dark();
-
-    gmLibraryProvider.configure({
-        key: 'AIzaSyAiY0eUkZA9ZIr-HNUauRWqrqyYwTOywfA'
-    });
 });
 
-angularApp.controller('angularController', ['$scope', 'socket', function ($scope, socket) {
+/**
+ * Creates an angular variable factory thingy for the socket so it updates the scope ($scope.apply)
+ * when you receive an event or send one
+ */
+angularApp.factory('socket', function ($rootScope) {
     "use strict";
+    let socket = io.connect();
+    return {
+        on: function (eventName, callback) {
+            socket.on(eventName, function () {
+                let args = arguments;
+                $rootScope.$apply(function () {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function (eventName, data, callback) {
+            socket.emit(eventName, data, function () {
+                let args = arguments;
+                $rootScope.$apply(function () {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            })
+        }
+    };
+});
+
+angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', function ($scope, socket, NgMap) {
+    "use strict";
+
+    $scope.resizeMap = function () {
+        NgMap.getMap().then(function (map) {
+            setTimeout(() => {
+                let center = map.getCenter();
+                google.maps.event.trigger(map, 'resize');
+                map.setCenter(center);
+            }, 1000);
+        });
+    };
 
     $scope.currentNavItem = 0;
     $scope.selectedChart = 0;
@@ -41,7 +75,7 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
         },
         {
             values: [],
-            key: 'Lap Number: ' + Math.random(),
+            key: 'Lap Number',
             color: '#00f',
             area: true,
             disabled: true
@@ -108,20 +142,40 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
             if (Array.isArray(newData)) {
                 console.log(newData);
                 addValuesToGraph(newData);
-                $scope.data[2].key = 'Lap Number: ' + newData[2];
-            }
 
+                $scope.data[0].key = 'Speed: ' + newData[0];
+                $scope.data[1].key = 'Engine Temp: ' + newData[1];
+                $scope.data[2].key = 'Lap Number: ' + newData[2];
+
+                if ($scope.currentLap !== newData[2]) {
+                    $scope.currentColor = $scope.lapColors[$scope.currentLap - 1];
+                    $scope.currentLap = newData[2];
+                }
+            }
         }
     }
 
-    $scope.currentLocation = [[40.223423, -84.917022]];
+    $scope.currentLap = 1;
+    $scope.lapColors = [
+        "#ff0000",
+        "#07b71b",
+        "#0000ff",
+        "#680dcc",
+        "#08ffd3",
+        "#ffc900",
+        "#ff00d9",
+        "#ff6b00",
+        "#623115",
+        "#454545"];
+    $scope.currentColor = $scope.lapColors[0];
+    $scope.currentLocation = "NoLocation";
+    $scope.polylineLocations = [];
 
     function parseLocation(location) {
         console.log(location);
-        //console.log(document.getElementById('map'));
-        //$scope.polylineLocations.push([$scope.currentLocation.latitude, $scope.currentLocation.longitude]);
-        $scope.currentLocation.shift();
-        $scope.currentLocation.push([location.latitude, location.longitude]);
+
+        $scope.currentLocation = [location.latitude, location.longitude];
+        $scope.polylineLocations.push($scope.currentLocation);
     }
 
     function addValuesToGraph(newData) {
@@ -292,32 +346,3 @@ angularApp.controller('angularController', ['$scope', 'socket', function ($scope
     });
 
 }]);
-
-/**
- * Creates an angular variable factory thingy for the socket so it updates the scope ($scope.apply)
- * when you receive an event or send one
- */
-angularApp.factory('socket', function ($rootScope) {
-    "use strict";
-    let socket = io.connect();
-    return {
-        on: function (eventName, callback) {
-            socket.on(eventName, function () {
-                let args = arguments;
-                $rootScope.$apply(function () {
-                    callback.apply(socket, args);
-                });
-            });
-        },
-        emit: function (eventName, data, callback) {
-            socket.emit(eventName, data, function () {
-                let args = arguments;
-                $rootScope.$apply(function () {
-                    if (callback) {
-                        callback.apply(socket, args);
-                    }
-                });
-            })
-        }
-    };
-});
