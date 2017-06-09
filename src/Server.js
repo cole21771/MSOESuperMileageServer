@@ -224,5 +224,6 @@ function Location(data) {
     this.latitude = data[0];
     this.longitude = data[1];
     this.altitude = data[2];
+    this.speed = data[3];
     this.timeStamp = new Date();
 }
