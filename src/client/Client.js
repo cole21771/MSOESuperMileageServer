@@ -180,6 +180,9 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
 
         $scope.currentLocation = [location.latitude, location.longitude];
         $scope.polylineLocations.push($scope.currentLocation);
+
+        if ($scope.locationSpeed.values.length > 20)
+            $scope.locationSpeed.values.shift();
         $scope.locationSpeed.values.push({x: new Date(), y: location.speed});
     }
 
