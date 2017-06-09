@@ -180,6 +180,7 @@ function exitHandler(options, err) {
         let filePath = new Date().toLocaleString().replace(/[:\/]/g, "-") + ".smv";
 
         fs.writeFileSync(storage + filePath, JSON.stringify(fullDataSet), "utf8");
+        fs.writeFileSync(storage + filePath + '.location', JSON.stringify(locationDataSet), 'utf8');
         console.log("File probably saved as " + filePath + " in saveData folder.");
     } else if (err)
         console.log(err.stack);
@@ -223,4 +224,5 @@ function Location(data) {
     this.latitude = data[0];
     this.longitude = data[1];
     this.altitude = data[2];
+    this.timeStamp = new Date();
 }
