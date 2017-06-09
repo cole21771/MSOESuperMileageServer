@@ -175,13 +175,21 @@ function recordLocation(location) {
 process.stdin.resume(); //so the program will not close instantly
 function exitHandler(options, err) {
     "use strict";
-    if (options.cleanup && fullDataSet.length !== 0) {
-        console.log("Attempting to write file!");
-        let filePath = new Date().toLocaleString().replace(/[:\/]/g, "-") + ".smv";
+    if (options.cleanup) {
+        if (fullDataSet.length !== 0) {
+            console.log("Attempting to write file!");
+            let filePath = new Date().toLocaleString().replace(/[:\/]/g, "-") + ".smv";
 
-        fs.writeFileSync(storage + filePath, JSON.stringify(fullDataSet), "utf8");
-        fs.writeFileSync(storage + filePath + '.location', JSON.stringify(locationDataSet), 'utf8');
-        console.log("File probably saved as " + filePath + " in saveData folder.");
+            fs.writeFileSync(storage + filePath, JSON.stringify(fullDataSet), "utf8");
+            console.log("File probably saved as " + filePath + " in saveData folder.");
+        }
+        if (locationDataSet.length !== 0) {
+            console.log("Attempting to write file!");
+            let filePath = new Date().toLocaleString().replace(/[:\/]/g, "-") + ".smvLocation";
+
+            fs.writeFileSync(storage + filePath, JSON.stringify(locationDataSet), 'utf8');
+            console.log("File probably saved as " + filePath + " in saveData folder.");
+        }
     } else if (err)
         console.log(err.stack);
     else if (options.exit)
