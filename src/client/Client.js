@@ -168,12 +168,19 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
     $scope.currentColor = $scope.lapColors[0];
     $scope.currentLocation = "NoLocation";
     $scope.polylineLocations = [];
+    $scope.locationSpeed = {
+        values: [],
+        key: 'Location Speed',
+        color: '#1596ff',
+        area: true
+    };
 
     function parseLocation(location) {
         console.log(location);
 
         $scope.currentLocation = [location.latitude, location.longitude];
         $scope.polylineLocations.push($scope.currentLocation);
+        $scope.locationSpeed.push(location.speed);
     }
 
     function addValuesToGraph(newData) {
