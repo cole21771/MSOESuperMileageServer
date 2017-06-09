@@ -180,7 +180,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
 
         $scope.currentLocation = [location.latitude, location.longitude];
         $scope.polylineLocations.push($scope.currentLocation);
-        $scope.locationSpeed.push(location.speed);
+        $scope.locationSpeed.values.push({x: new Date(), y: location.speed});
     }
 
     function addValuesToGraph(newData) {
