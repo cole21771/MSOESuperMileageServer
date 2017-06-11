@@ -105,24 +105,44 @@ io.on('connection', (socket) => {
     socket.on("getCSV", (data) => {
         "use strict";
         let filename = data.filename, labels = data.labels;
-
         let fileData = JSON.parse(fs.readFileSync(storage + filename, "utf8"));
-        if (Array.isArray(fileData)) {
-            let convertedData = "Time, ";
+        let fileExtension = filename.split('.').pop();
 
-            if (Array.isArray(labels))
-                convertedData += labels.join(',') + "\n";
+        if (fileExtension === 'smv') {
+            if (Array.isArray(fileData)) {
+                let convertedData = "Time, ";
+
+                if (Array.isArray(labels))
+                    convertedData += labels.join(',') + "\n";
+
+                let firstTime = new Date(fileData[0].timeStamp).getTime();
+                fileData.forEach((dataPoint) => {
+                    convertedData += (new Date(dataPoint.timeStamp).getTime() - firstTime) + ", " + JSON.parse(dataPoint.data).join(',') + "\n";
+                });
+
+                socket.emit("convertedCSVFile", {
+                    data: convertedData,
+                    filename: filename.slice(0, filename.indexOf('.')) + '.csv'
+                });
+            } else
+                socket.emit('dataUnreadable', filename);
+        } else if (fileExtension === 'smvLocation'){
+            let convertedData = "Time (ms), Latitude, Longitude, Altitude, Speed\n";
 
             let firstTime = new Date(fileData[0].timeStamp).getTime();
             fileData.forEach((dataPoint) => {
-                convertedData += (new Date(dataPoint.timeStamp).getTime() - firstTime) + ", " + JSON.parse(dataPoint.data).join(',') + "\n";
+                convertedData += (new Date(dataPoint.timeStamp).getTime() - firstTime) + ", " +
+                    dataPoint.latitude + ", " +
+                    dataPoint.longitude + ", " +
+                    dataPoint.altitude + ", " +
+                    dataPoint.speed + ", " + "\n";
             });
 
             socket.emit("convertedCSVFile", {
                 data: convertedData,
-                filename: filename.slice(0, filename.indexOf('.')) + '.csv'
-            })
-        } else
+                filename: filename.slice(0, filename.indexOf('.')) + "-Location" + '.csv'
+            });
+        }else
             socket.emit("dataUnreadable", filename);
     });
 

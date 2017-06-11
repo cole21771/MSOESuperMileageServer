@@ -222,6 +222,10 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         $scope.savedDataList = savedData;
     });
 
+    socket.on("dataUnreadable", (filename) => {
+        alert("'" + filename + "' was unreadable for some reason...");
+    });
+
     /**
      * Emits a call to the server for when a filename is clicked from the list
      *
