@@ -244,6 +244,8 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
     socket.on("requestedFile", (data) => {
         $scope.selectedData = data;
         $scope.selectedDataPolyline = [];
+        $scope.selectedDataPolylineRemoved = [];
+        $scope.reviewSliderValue = 100;
 
         data = JSON.parse(data);
 
@@ -369,5 +371,16 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
 
         document.body.removeChild(element);
     });
+
+    $scope.$watch("reviewSliderValue", (newValue) => {
+        $scope.selectedDataPolyline = $scope.selectedDataPolyline.concat($scope.selectedDataPolylineRemoved);
+        $scope.selectedDataPolylineRemoved = [];
+
+        let itemsRemaining = Math.round($scope.selectedDataPolyline.length * (newValue / 100));
+
+        $scope.selectedDataPolylineRemoved = $scope.selectedDataPolyline.splice(itemsRemaining, $scope.selectedDataPolyline.length - 1);
+    });
+
+    $scope.selectedDataPolylineRemoved = [];
 
 }]);

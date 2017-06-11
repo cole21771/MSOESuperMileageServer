@@ -38,12 +38,16 @@
                     <tr ng-repeat="graphData in data track by $index" ng-hide="graphData.disabled">
                         <td class="text-left">{{graphData.key}}</td>
                         <td class="text-left">{{graphData.values[graphData.values.length - 1].y}}</td>
-                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}</td>
+                        <td class="text-left">{{graphData.values[graphData.values.length - 1].x.toLocaleTimeString()}}
+                        </td>
                     </tr>
                     <tr>
                         <td class="text-left">{{locationSpeed.key}}</td>
-                        <td class="text-left">{{locationSpeed.values[locationSpeed.values.length - 1].y.toFixed(2)}}</td>
-                        <td class="text-left">{{locationSpeed.values[locationSpeed.values.length - 1].x.toLocaleTimeString()}}</td>
+                        <td class="text-left">{{locationSpeed.values[locationSpeed.values.length - 1].y.toFixed(2)}}
+                        </td>
+                        <td class="text-left">{{locationSpeed.values[locationSpeed.values.length -
+                            1].x.toLocaleTimeString()}}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -55,13 +59,14 @@
                         <nvd3 options="options" data="data" api="api[0]" style="fill:#fff;"
                               config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
                     </md-tab>
-                        <md-tab ng-repeat="graphData in data track by $index" ng-disabled="graphData.disabled" label="{{graphData.key}}">
-                            <nvd3 options="options" data="[graphData]" api="api[$index + 1]" style="fill:#fff;"
-                                  config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                        </md-tab>
-                        <md-tab label="{{locationSpeed.key}}">
-                            <nvd3 options="options" data="[locationSpeed]" style="fill:#fff;"></nvd3>
-                        </md-tab>
+                    <md-tab ng-repeat="graphData in data track by $index" ng-disabled="graphData.disabled"
+                            label="{{graphData.key}}">
+                        <nvd3 options="options" data="[graphData]" api="api[$index + 1]" style="fill:#fff;"
+                              config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
+                    </md-tab>
+                    <md-tab label="{{locationSpeed.key}}">
+                        <nvd3 options="options" data="[locationSpeed]" style="fill:#fff;"></nvd3>
+                    </md-tab>
                 </md-tabs>
                 <md-button ng-show="shouldRender" class="md-raised md-warn" ng-click="shouldRender = false">Pause
                 </md-button>
@@ -75,7 +80,7 @@
                     &lt;!&ndash;<gm-polyline options&ndash;&gt;
                     <gm-marker ng-repeat="location in currentLocation" options="{position: {{location}}}"></gm-marker>
                 </gm-map>-->
-                <ng-map id="map" style="height: 80%" zoom="15" center="[42.223423, -84.917022]">
+                <ng-map id="map" style="height: 80%" zoom="15" center="{{polylineLocations[0]}}">
                     <marker position="[42.223423, -84.917022]"></marker>
                     <marker position="{{currentLocation}}"></marker>
                     <shape name="polyline" path="{{polylineLocations}}" stroke-color="{{currentColor}}"></shape>
@@ -96,17 +101,29 @@
                                   ng-click="selectDataSet(fileName)">
                         <div class="md-list-item-text">{{fileName}}</div>
                         <md-button class="md-raised md-primary" ng-click="renameFile(fileName)">Rename File</md-button>
-                        <md-button class="md-raised md-primary" ng-click="retrieveCSV(fileName)">Download as '.csv'</md-button>
+                        <md-button class="md-raised md-primary" ng-click="retrieveCSV(fileName)">Download as '.csv'
+                        </md-button>
                         <md-button class="md-raised md-warn" ng-click="deleteFile(fileName)">Delete</md-button>
                     </md-list-item>
                 </md-list>
 
-                <p ng-show="selectedData != undefined">
-                    <ng-map id="reviewMap" style="height: 80%" zoom="15" center="{{selectedDataPolyline[0]}}">
-                        <marker position="{{selectedDataPolyline[0]}}"></marker>
-                        <shape name="polyline" path="{{selectedDataPolyline}}" stroke-color="#f00"></shape>
-                    </ng-map>
-                </p>
+                <div ng-show="selectedData != undefined">
+                    <div layout="row" style="height: 70%">
+                        <ng-map id="reviewMap" zoom="15" layout-fill
+                                center="{{selectedDataPolyline[0]}}">
+                            <marker position="{{selectedDataPolyline[0]}}"></marker>
+                            <shape name="polyline" path="{{selectedDataPolyline}}" stroke-color="#f00"></shape>
+                        </ng-map>
+                        <div layout-fill>
+                            <nvd3 options="options" data="[locationSpeed]" style="fill: #fff;"></nvd3>
+                        </div>
+                    </div>
+                    <md-slider-container style="width: 100%">
+                        <span>Label</span>
+                        <md-slider min="0" md-discrete max="100" step="1" ng-model="reviewSliderValue" aria-label="test"
+                                   id="reviewSlider"></md-slider>
+                    </md-slider-container>
+                </div>
             </md-tab>
         </md-tabs>
     </md-content>
