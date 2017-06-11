@@ -68,7 +68,7 @@
                 <md-button ng-hide="shouldRender" class="md-raised md-warn" ng-click="shouldRender = true">Play
                 </md-button>
             </md-tab>
-            <md-tab label="Map" md-on-select="resizeMap()">
+            <md-tab label="Map" md-on-select="resizeMap('map')">
                 <hr> <!------------------------------------------------------------------------------------------------>
                 <!--<gm-map id="map" options="{zoom: 8, center: [42.223423, -84.917022], mapTypeId: google.maps.MapTypeId.ROADMAP}">
                     <gm-marker options="{position: [42.223423, -84.917022]}"></gm-marker>
@@ -102,7 +102,10 @@
                 </md-list>
 
                 <p ng-show="selectedData != undefined">
-                    {{selectedData}}
+                    <ng-map id="reviewMap" style="height: 80%" zoom="15" center="{{selectedDataPolyline[0]}}">
+                        <marker position="{{selectedDataPolyline[0]}}"></marker>
+                        <shape name="polyline" path="{{selectedDataPolyline}}" stroke-color="#f00"></shape>
+                    </ng-map>
                 </p>
             </md-tab>
         </md-tabs>

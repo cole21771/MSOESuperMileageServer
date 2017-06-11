@@ -45,8 +45,8 @@ angularApp.factory('socket', function ($rootScope) {
 angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', function ($scope, socket, NgMap) {
     "use strict";
 
-    $scope.resizeMap = function () {
-        NgMap.getMap().then(function (map) {
+    $scope.resizeMap = function (id) {
+        NgMap.getMap({id: id}).then(function (map) {
             setTimeout(() => {
                 let center = map.getCenter();
                 google.maps.event.trigger(map, 'resize');
@@ -236,11 +236,24 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         socket.emit("retrieveFile", selectedFilename);
     };
 
+    $scope.selectedDataPolyline = [];
+
     /**
      * A listener for when the server sends the actual contents of a selected file over
      */
     socket.on("requestedFile", (data) => {
         $scope.selectedData = data;
+        $scope.selectedDataPolyline = [];
+
+        data = JSON.parse(data);
+
+        if (Array.isArray(data)) {
+            data.forEach((dataPoint) => {
+                $scope.selectedDataPolyline.push([dataPoint.latitude, dataPoint.longitude]);
+            });
+
+            $scope.resizeMap('reviewMap');
+        }
     });
 
     /**
