@@ -67,37 +67,40 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             disabled: false
         },
         {
-            values: [],             //values - represents the array of {x,y} data points
-            key: 'Engine Temp',     //key  - the name of the series.
-            color: '#0f0',          //color - optional: choose your own line color.
-            area: true,             //area - set to true if you want this line to turn into a filled area chart.
+            values: [],             //values   - represents the array of {x,y} data points
+            key: 'Motor RPM',       //key      - the name of the series.
+            color: '#0f0',          //color    - optional: choose your own line color.
+            area: true,             //area     - set to true if you want this line to turn into a filled area chart.
+            disabled: false         //disabled - determines whether or not to show a graph and a table for the value
+        },
+        {
+            values: [],
+            key: 'Joules',
+            color: '#00f',
+            area: true,
+            disabled: false
+        },
+        {
+            values: [],
+            key: 'Volts',
+            color: '#0ff',
+            area: true,
+            disabled: false
+        },
+        {
+            values: [],
+            key: 'Current',
+            color: '#f0f',
+            area: true,
             disabled: false
         },
         {
             values: [],
             key: 'Lap Number',
-            color: '#00f',
+            color: '#ff7f00',
             area: true,
             disabled: true
-        }/*,
-         {
-         values: [],
-         key: 'AFR',
-         color: '#0ff',
-         area: true
-         },
-         {
-         values: [],
-         key: 'Throttle Position',
-         color: '#f0f',
-         area: true
-         },
-         {
-         values: [],
-         key: 'Motor RPM',
-         color: '#ff7f00',
-         area: true
-         }*/
+        }
     ];
 
     $scope.options = {
