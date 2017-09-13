@@ -146,11 +146,11 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
                 console.log(newData);
                 addValuesToGraph(newData);
 
-                $scope.data[2].key = 'Lap Number: ' + newData[2];
+                $scope.data[5].key = 'Lap Number: ' + newData[2];
 
-                if ($scope.currentLap !== newData[2]) {
+                if ($scope.currentLap !== newData[5]) {
                     $scope.currentColor = $scope.lapColors[$scope.currentLap - 1];
-                    $scope.currentLap = newData[2];
+                    $scope.currentLap = newData[5];
                 }
             }
         }
