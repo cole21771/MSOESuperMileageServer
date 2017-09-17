@@ -247,14 +247,14 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
      * A listener for when the server sends the actual contents of a selected file over
      */
     socket.on("requestedFile", (data) => {
-        $scope.selectedData = data;
         $scope.selectedDataPolyline = [];
         $scope.selectedDataPolylineRemoved = [];
-        $scope.reviewSliderValue = 100;
 
         data = JSON.parse(data);
 
         if (Array.isArray(data)) {
+            $scope.selectedData = data;
+            $scope.reviewSliderValue = data.length - 1;
             data.forEach((dataPoint) => {
                 $scope.selectedDataPolyline.push([dataPoint.latitude, dataPoint.longitude]);
             });
@@ -262,6 +262,16 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             $scope.resizeMap('reviewMap');
         }
     });
+
+    $scope.startPlayback = function () {
+        $scope.timer = setInterval(() => {
+            $scope.reviewSliderValue += 1;
+        }, 10);
+    };
+
+    $scope.stopPlayback = function() {
+        clearInterval($scope.timer);
+    };
 
     /**
      * When the client is connected it disables the offline svg
@@ -381,11 +391,8 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         $scope.selectedDataPolyline = $scope.selectedDataPolyline.concat($scope.selectedDataPolylineRemoved);
         $scope.selectedDataPolylineRemoved = [];
 
-        let itemsRemaining = Math.round($scope.selectedDataPolyline.length * (newValue / 100));
-
-        $scope.selectedDataPolylineRemoved = $scope.selectedDataPolyline.splice(itemsRemaining, $scope.selectedDataPolyline.length - 1);
+        $scope.selectedDataPolylineRemoved = $scope.selectedDataPolyline.splice(newValue, $scope.selectedDataPolyline.length - 1);
     });
 
     $scope.selectedDataPolylineRemoved = [];
-
 }]);
