@@ -129,7 +129,9 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             },
             yAxis: {
                 axisLabel: 'Values'
-            }
+            },
+            yDomain: [0, 35]
+
         }
     };
 
