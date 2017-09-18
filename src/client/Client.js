@@ -65,7 +65,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             min: 0,
             max: 35,
             units: 'MPH',
-            disabled: false
+            displayAlways: false
         },
         {
             label: 'Motor RPM',
@@ -73,15 +73,15 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             min: 0,
             max: 3500,
             units: 'RPM',
-            disabled: false
+            displayAlways: false
         },
         {
             label: 'Joules',
             color: '#00f',
             min: 0,
-            max: 10000,
+            max: 1000000,
             units: 'J',
-            disabled: false
+            displayAlways: true
         },
         {
             label: 'Volts',
@@ -89,7 +89,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             min: 0,
             max: 30,
             units: 'V',
-            disabled: false
+            displayAlways: false
         },
         {
             label: 'Current',
@@ -97,7 +97,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             min: 0,
             max: 50,
             units: 'A',
-            disabled: false
+            displayAlways: false
         },
         {
             label: 'Lap Number',
@@ -105,7 +105,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             min: 0,
             max: 10,
             units: '',
-            disabled: true
+            displayAlways: true
         }
     ];
 

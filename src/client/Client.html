@@ -54,7 +54,7 @@
             </md-tab>
             <md-tab label="Charts">
                 <hr> <!------------------------------------------------------------------------------------------------>
-                <div style="display:inline-block; margin-right: 1%;" ng-repeat="graphData in data track by $index">
+                <div ng-hide="graphData.displayAlways" style="display:inline-block; margin-right: 1%;" ng-repeat="graphData in data track by $index">
                     <label>{{graphData.label}}</label>
                     <div id="{{graphData.label}}"></div>
                 </div>
