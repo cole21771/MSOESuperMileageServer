@@ -9,8 +9,8 @@ angularApp.config(function ($mdThemingProvider) {
     "use strict";
 
     $mdThemingProvider.theme('default')
-        .primaryPalette('blue')
-        .dark();
+        .primaryPalette('blue');
+    //.dark();
 });
 
 /**
@@ -55,54 +55,104 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         });
     };
 
-    $scope.currentNavItem = 1;
+    $scope.currentNavItem = 0;
     $scope.selectedChart = 0;
 
     $scope.data = [
         {
-            values: [],
-            key: 'Speed',
+            label: 'Speed',
             color: '#f00',
-            area: true,
+            min: 0,
+            max: 35,
+            units: 'MPH',
             disabled: false
         },
         {
-            values: [],             //values   - represents the array of {x,y} data points
-            key: 'Motor RPM',       //key      - the name of the series.
-            color: '#0f0',          //color    - optional: choose your own line color.
-            area: true,             //area     - set to true if you want this line to turn into a filled area chart.
-            disabled: false         //disabled - determines whether or not to show a graph and a table for the value
+            label: 'Motor RPM',
+            color: '#0f0',
+            min: 0,
+            max: 3500,
+            units: 'RPM',
+            disabled: false
         },
         {
-            values: [],
-            key: 'Joules',
+            label: 'Joules',
             color: '#00f',
-            area: true,
+            min: 0,
+            max: 10000,
+            units: 'J',
             disabled: false
         },
         {
-            values: [],
-            key: 'Volts',
+            label: 'Volts',
             color: '#0ff',
-            area: true,
+            min: 0,
+            max: 30,
+            units: 'V',
             disabled: false
         },
         {
-            values: [],
-            key: 'Current',
+            label: 'Current',
             color: '#f0f',
-            area: true,
+            min: 0,
+            max: 50,
+            units: 'A',
             disabled: false
         },
         {
-            values: [],
-            key: 'Lap Number',
+            label: 'Lap Number',
             color: '#ff7f00',
-            area: true,
+            min: 0,
+            max: 10,
+            units: '',
             disabled: true
         }
     ];
 
+    $scope.graphs = [];
+    let Rickshaw = require('rickshaw');
+    //let pallet = Rickshaw.Color.Palette({scheme: 'munin'});
+
+    $scope.resizeGraphs = function () {
+        $scope.graphs.forEach((graph) => {
+            graph.width = window.innerWidth / 2.2;
+        });
+    };
+
+    angular.element(document).ready(() => {
+        $scope.data.forEach((graphData) => {
+            let graph = new Rickshaw.Graph({
+                element: document.getElementById(graphData.label),
+                width: 900,
+                height: 260,
+                renderer: 'area',
+                stroke: true,
+                interpolation: 'linear',
+                series: new Rickshaw.Series.FixedDuration([{
+                    name: graphData.label,
+                    color: graphData.color
+                }], undefined, {
+                    timeInterval: 250,
+                    maxDataPoints: 120,
+                    timeBase: new Date().getTime() / 1000,
+                }),
+                min: graphData.min,
+                max: graphData.max
+            });
+
+            new Rickshaw.Graph.HoverDetail({
+                graph: graph,
+                yFormatter: (y) => {
+                    return y.toFixed(2) + ' ' + graphData.units;
+                }
+            });
+
+            new Rickshaw.Graph.Axis.Time({graph: graph});
+            new Rickshaw.Graph.Axis.Y({graph: graph});
+
+            $scope.graphs.push(graph);
+        });
+    });
 
 
     $scope.beginDataFetch = function () {
@@ -116,14 +166,17 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
             newData = JSON.parse(newData);
             if (Array.isArray(newData)) {
                 console.log(newData);
-                addValuesToGraph(newData);
 
-                $scope.data[5].key = 'Lap Number: ' + newData[2];
+                $scope.graphs.forEach((graph, index) => {
 
-                if ($scope.currentLap !== newData[5]) {
-                    $scope.currentColor = $scope.lapColors[$scope.currentLap - 1];
-                    $scope.currentLap = newData[5];
-                }
+                    let data = {};
+
+                    data[graph.element.id] = newData[index];
+
+                    graph.series.addData(data);
+
+                    graph.render();
+                });
             }
         }
     }
@@ -159,23 +212,6 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         if ($scope.locationSpeed.values.length > 20)
             $scope.locationSpeed.values.shift();
         $scope.locationSpeed.values.push({x: new Date(), y: location.speed});
-    }
-
-    function addValuesToGraph(newData) {
-        "use strict";
-
-        if ($scope.data[0].values.length > 20) {
-            $scope.data.forEach(function (graph) {
-                graph.values.shift();
-            });
-        }
-
-        $scope.data.forEach(function (graph, index) {
-            graph.values.push({x: new Date(), y: newData[index]});
-        });
-
-        if ($scope.shouldRender && $scope.currentNavItem === 1)
-            $scope.api[$scope.selectedChart].update();
     }
 
     /**
@@ -239,7 +275,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         }, 10);
     };
 
-    $scope.stopPlayback = function() {
+    $scope.stopPlayback = function () {
         clearInterval($scope.timer);
     };
 
