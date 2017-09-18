@@ -113,17 +113,21 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
     let Rickshaw = require('rickshaw');
     //let pallet = Rickshaw.Color.Palette({scheme: 'munin'});
 
-    $scope.resizeGraphs = function () {
-        $scope.graphs.forEach((graph) => {
-            graph.width = window.innerWidth / 2.2;
-        });
-    };
-
     angular.element(document).ready(() => {
+
+        let windowWidth = window.innerWidth;
+        let width;
+
+        if (windowWidth >= 1900)
+            width = 900;
+        else
+            width = windowWidth;
+
+
         $scope.data.forEach((graphData) => {
             let graph = new Rickshaw.Graph({
                 element: document.getElementById(graphData.label),
-                width: 900,
+                width: width,
                 height: 260,
                 renderer: 'area',
                 stroke: true,
