@@ -54,24 +54,7 @@
             </md-tab>
             <md-tab label="Charts">
                 <hr> <!------------------------------------------------------------------------------------------------>
-                <md-tabs md-dynamic-height md-selected="selectedChart">
-                    <md-tab label="All Graphs">
-                        <nvd3 options="options" data="data" api="api[0]" style="fill:#fff;"
-                              config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab ng-repeat="graphData in data track by $index" ng-disabled="graphData.disabled"
-                            label="{{graphData.key}}">
-                        <nvd3 options="options" data="[graphData]" api="api[$index + 1]" style="fill:#fff;"
-                              config="{refreshDataOnly:true, deepWatchData: false}"></nvd3>
-                    </md-tab>
-                    <md-tab label="{{locationSpeed.key}}">
-                        <nvd3 options="options" data="[locationSpeed]" style="fill:#fff;"></nvd3>
-                    </md-tab>
-                </md-tabs>
-                <md-button ng-show="shouldRender" class="md-raised md-warn" ng-click="shouldRender = false">Pause
-                </md-button>
-                <md-button ng-hide="shouldRender" class="md-raised md-warn" ng-click="shouldRender = true">Play
-                </md-button>
+
             </md-tab>
             <md-tab label="Map" md-on-select="resizeMap('map')">
                 <hr> <!------------------------------------------------------------------------------------------------>

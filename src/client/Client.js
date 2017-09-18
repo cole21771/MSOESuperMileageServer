@@ -2,7 +2,7 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'nvd3', 'ngMap']);
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'ngMap']);
 
 //Sets the theme to a dark theme of the default theme (but with a blue accent palette)
 angularApp.config(function ($mdThemingProvider) {
@@ -55,7 +55,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         });
     };
 
-    $scope.currentNavItem = 0;
+    $scope.currentNavItem = 1;
     $scope.selectedChart = 0;
 
     $scope.data = [
@@ -103,37 +103,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         }
     ];
 
-    $scope.options = {
-        chart: {
-            type: 'lineChart',
-            height: 450,
-            margin: {
-                top: 20,
-                right: 50,
-                bottom: 60,
-                left: 75
-            },
-            x: function (d) {
-                return d.x;
-            },
-            y: function (d) {
-                return d.y;
-            },
-            useInteractiveGuideline: true,
-            duration: 0,
-            xAxis: {
-                axisLabel: 'Time (HH:MM:SS)',
-                tickFormat: function (d) {
-                    return new Date(d).toLocaleTimeString();
-                }
-            },
-            yAxis: {
-                axisLabel: 'Values'
-            },
-            yDomain: [0, 35]
 
-        }
-    };
 
     $scope.beginDataFetch = function () {
         socket.on("newData", parseData);

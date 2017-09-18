@@ -19,13 +19,14 @@
     "angular-aria": "^1.6.6",
     "angular-material": "^1.1.5",
     "angular-messages": "^1.6.6",
-    "angular-nvd3": "^1.0.9",
     "body-parser": "^1.18.1",
+    "d3": "^4.10.2",
     "ejs": "^2.5.7",
     "express": "^4.15.4",
     "fastdom": "^1.0.6",
     "fs": "0.0.1-security",
     "ngmap": "^1.18.4",
+    "rickshaw": "^1.6.3",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {

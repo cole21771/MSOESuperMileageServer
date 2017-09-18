@@ -9,7 +9,8 @@ module.exports = {
             'angular-messages',
             'angular-material',
             'fastdom',
-            'angular-nvd3',
+            'd3',
+            'rickshaw',
             'ngmap']
     },
     output: {
