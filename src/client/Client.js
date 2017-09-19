@@ -9,8 +9,8 @@ angularApp.config(function ($mdThemingProvider) {
     "use strict";
 
     $mdThemingProvider.theme('default')
-        .primaryPalette('blue');
-    //.dark();
+        .primaryPalette('blue')
+    .dark();
 });
 
 /**
@@ -115,8 +115,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
 
     angular.element(document).ready(() => {
 
-        let windowWidth = window.innerWidth;
-        let width;
+        let windowWidth = window.innerWidth, width;
 
         if (windowWidth >= 1900)
             width = 900;
@@ -158,8 +157,9 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         });
     });
 
-
     $scope.beginDataFetch = function () {
+        $scope.isRunning = true;
+
         socket.on("newData", parseData);
         socket.on("newLocation", parseLocation);
     };
@@ -172,20 +172,18 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
                 console.log(newData);
 
                 $scope.graphs.forEach((graph, index) => {
+                        let data = {};
 
-                    let data = {};
+                        data[graph.element.id] = newData[index];
 
-                    data[graph.element.id] = newData[index];
+                        graph.series.addData(data);
 
-                    graph.series.addData(data);
-
-                    graph.render();
+                        graph.render();
                 });
             }
         }
     }
 
-    $scope.currentLap = 1;
     $scope.lapColors = [
         "#ff0000",
         "#07b71b",
