@@ -57,6 +57,8 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
 
     $scope.currentNavItem = 0;
     $scope.selectedChart = 0;
+    $scope.currentLocation = "NoLocation";
+    $scope.polylineLocations = [[43.043396, -87.903882]];
 
     $scope.data = [
         {
@@ -109,19 +111,32 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         }
     ];
 
+    /*angular.element(window).bind('resize', () => {
+        $scope.graphs.forEach((graph) => {
+            graph.width = determineGraphWidth();
+        });
+    });*/
+
+    function determineGraphWidth(){
+        if (window.innerWidth >= 1900)
+           return window.innerWidth / 2.2;
+        else
+            return window.innerWidth;
+    }
+
     $scope.graphs = [];
     let Rickshaw = require('rickshaw');
     //let pallet = Rickshaw.Color.Palette({scheme: 'munin'});
 
     angular.element(document).ready(() => {
 
-        let windowWidth = window.innerWidth, width;
+        setupGraphs();
 
-        if (windowWidth >= 1900)
-            width = 900;
-        else
-            width = windowWidth;
+        addMap();
+    });
 
+    function setupGraphs() {
+        let width = determineGraphWidth();
 
         $scope.data.forEach((graphData) => {
             let graph = new Rickshaw.Graph({
@@ -155,10 +170,16 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
 
             $scope.graphs.push(graph);
         });
-    });
+    }
+
+    function addMap(){
+
+    }
 
     $scope.beginDataFetch = function () {
         $scope.isRunning = true;
+
+        //setTimeout($scope.resizeMap('map'), 1000);
 
         socket.on("newData", parseData);
         socket.on("newLocation", parseLocation);
@@ -196,8 +217,8 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
         "#623115",
         "#454545"];
     $scope.currentColor = $scope.lapColors[0];
-    $scope.currentLocation = "NoLocation";
-    $scope.polylineLocations = [];
+
+
     $scope.locationSpeed = {
         values: [],
         key: 'Location Speed',
