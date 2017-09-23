@@ -11,7 +11,7 @@ module.exports = {
             'fastdom',
             'd3',
             'rickshaw',
-            'ngmap']
+            'angular-google-maps']
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

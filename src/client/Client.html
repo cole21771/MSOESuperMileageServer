@@ -34,14 +34,20 @@
             </md-tab>
             <md-tab label="Map" md-on-select="resizeMap('map')">
                 <hr> <!--------------------------------------------------------------------------------------------------Map-->
-                <ng-map id="map" style="height: 80%" zoom="15" center="{{polylineLocations[0]}}">
-                    <marker position="[42.223423, -84.917022]"></marker>
-                    <marker position="{{currentLocation}}"></marker>
-                    <shape name="polyline" path="{{polylineLocations}}" stroke-color="{{currentColor}}"></shape>
-                </ng-map>
+
+
+
+
+
+
+
+
+
+
+
             </md-tab>
-            <md-tab label="Review Saved Data">
-                <hr> <!--------------------------------------------------------------------------------------------------Review Saved Data-->
+            <!--<md-tab label="Review Saved Data">
+                <hr> &lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;Review Saved Data&ndash;&gt;
                 <md-button class="md-raised md-primary" ng-click="getSavedData()">Get Saved Data</md-button>
                 <svg fill="#fff" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg"
                      ng-show="needRefresh">
@@ -89,7 +95,7 @@
                     </md-slider-container>
                 </div>
             </md-tab>
-        </md-tabs>
+        </md-tabs>-->
         <!---------------------------------------------------------------------------------------------------------------Hover Content-->
         <div style="position: fixed; left: 0; bottom: 0;" ng-hide="isRunning">
             <md-button class="md-raised md-primary" ng-click="beginDataFetch()">Start Fetching Data</md-button>
