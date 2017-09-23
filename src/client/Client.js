@@ -2,15 +2,19 @@
  * Created by cole2 on 5/15/2017.
  */
 
-const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'ngMap']);
+const angularApp = angular.module('angularApp', ['ng', 'ngAnimate', 'ngAria', 'ngMessages', 'ngMaterial', 'angular', 'uiGmapgoogle-maps']);
 
 //Sets the theme to a dark theme of the default theme (but with a blue accent palette)
-angularApp.config(function ($mdThemingProvider) {
+angularApp.config(function ($mdThemingProvider, uiGmapGoogleMapApiProvider) {
     "use strict";
 
     $mdThemingProvider.theme('default')
         .primaryPalette('blue')
     .dark();
+
+    uiGmapGoogleMapApiProvider.configure({
+        key: 'AIzaSyCXTicCw9NOd_2kDYh3JUazhMQ4434I1ts'
+    });
 });
 
 /**
@@ -42,18 +46,12 @@ angularApp.factory('socket', function ($rootScope) {
     };
 });
 
-angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', function ($scope, socket, NgMap) {
+angularApp.controller('angularController', ['$scope', 'socket', 'uiGmapGoogleMapApi', function ($scope, socket, uiGmapGoogleMapApi) {
     "use strict";
 
-    $scope.resizeMap = function (id) {
-        NgMap.getMap({id: id}).then(function (map) {
-            setTimeout(() => {
-                let center = map.getCenter();
-                google.maps.event.trigger(map, 'resize');
-                map.setCenter(center);
-            }, 1000);
-        });
-    };
+    uiGmapGoogleMapApi.then((map) => {
+        //$scope.map = map;
+    });
 
     $scope.currentNavItem = 0;
     $scope.selectedChart = 0;
@@ -288,7 +286,7 @@ angularApp.controller('angularController', ['$scope', 'socket', 'NgMap', functio
                 $scope.selectedDataPolyline.push([dataPoint.latitude, dataPoint.longitude]);
             });
 
-            $scope.resizeMap('reviewMap');
+            //$scope.resizeMap('reviewMap');
         }
     });
 
